@@ -24,7 +24,7 @@ app.get('/', function (req, res) {
 })
 
 app.get('/api', function (req, res) {
-  res.sendFile(path.resolve(__dirname, '../index.html'))
+  res.sendFile(path.resolve(__dirname, '../api-test.html'))
 })
 
 app.listen(port, () => {
