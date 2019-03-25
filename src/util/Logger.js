@@ -6,9 +6,14 @@ import moment from 'moment'
 
 class Logger {
 
+  constructor(directory = "/var/log") {
+    this.directory = directory
+  }
+
   date = () => moment().format('DD_MM_YYYY')
   time = () => moment().format('LTS')
-  path = () => path.resolve(__dirname, '../src/server/logs', `${this.date()}.log`)
+  path = () => path.resolve(this.directory, `${this.date()}.log`)
+
 
   info = (message) => {
     this.log(message)

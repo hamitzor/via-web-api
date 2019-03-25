@@ -2,7 +2,28 @@ const path = require('path')
 const nodeExternals = require('webpack-node-externals')
 
 
-module.exports = function (env, argv) {
+const clientConfig = function (env, argv) {
+  const mode = argv.mode
+  const outputDirectory = mode === 'production' ? 'dist' : 'build'
+  return {
+    mode: mode,
+    module: {
+      rules: [
+        { test: /\.js$/, exclude: /node_modules/, loader: 'babel-loader' }
+      ]
+    },
+    devtool: 'source-map',
+    context: path.resolve(__dirname, 'src'),
+    entry: './clientTestMain.js',
+    output: {
+      path: path.resolve(__dirname, outputDirectory),
+      filename: 'clientTestBundle.js',
+      publicPath: '/'
+    }
+  }
+}
+
+const serverConfig = function (env, argv) {
   const mode = argv.mode
   const outputDirectory = mode === 'production' ? 'dist' : 'build'
   return {
@@ -18,7 +39,7 @@ module.exports = function (env, argv) {
     entry: './main.js',
     output: {
       path: path.resolve(__dirname, outputDirectory),
-      filename: 'start_app.js',
+      filename: 'startApp.js',
     },
     node: {
       __dirname: false
@@ -26,3 +47,6 @@ module.exports = function (env, argv) {
     externals: [nodeExternals()]
   }
 }
+
+
+module.exports = [clientConfig, serverConfig]
