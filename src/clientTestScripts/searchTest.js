@@ -3,18 +3,24 @@ window.SEARCH_ROOT = document.createElement("DIV")
 const openTest = () => {
 
   //CREATE TEST ELEMENTS
-  const submitQueryByExample = document.createElement("BUTTON")
+  const endPointInput = document.createElement("INPUT")
+  endPointInput.placeholder = "Endpoint URL"
+  endPointInput.value = "localhost:8080"
   const br = document.createElement("BR")
-  submitQueryByExample.innerHTML = "Search API - Test Query by Example"
   const fileInput = document.createElement("INPUT")
   fileInput.type = "file"
   const numberInput = document.createElement("INPUT")
   numberInput.type = "number"
   numberInput.value = 1
+  const submitQueryByExample = document.createElement("BUTTON")
+  submitQueryByExample.innerHTML = "Search API - Test Query by Example"
   const pre = document.createElement("PRE")
   const code = document.createElement("CODE")
   pre.appendChild(code)
   const message = document.createElement("h4")
+  window.SEARCH_ROOT.appendChild(br.cloneNode())
+  window.SEARCH_ROOT.appendChild(endPointInput)
+  window.SEARCH_ROOT.appendChild(br.cloneNode())
   window.SEARCH_ROOT.appendChild(br.cloneNode())
   window.SEARCH_ROOT.appendChild(numberInput)
   window.SEARCH_ROOT.appendChild(br.cloneNode())
@@ -30,6 +36,7 @@ const openTest = () => {
 
 
   submitQueryByExample.onclick = () => {
+    const endPoint = endPointInput.value
     const file = fileInput.files[0]
     const filePath = fileInput.value
     const videoId = parseInt(numberInput.value)
@@ -41,7 +48,7 @@ const openTest = () => {
         base64Image: reader.result
       }
 
-      const ws = new WebSocket("ws://localhost:8080")
+      const ws = new WebSocket(`ws:${endPoint}`)
 
       ws.onopen = function () {
         ws.send(JSON.stringify(data))
