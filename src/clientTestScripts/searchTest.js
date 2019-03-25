@@ -52,7 +52,7 @@ const openTest = () => {
 
       ws.onopen = function () {
         ws.send(JSON.stringify(data))
-        message.innerHTML = `Query by Example request sent with parameters videoId = ${videoId} image = ${filePath} waiting respond...`
+        message.innerHTML = `Query by Example request sent with parameters videoId = ${videoId} image = ${filePath} waiting for response...`
         code.innerHTML = ""
       }
 
