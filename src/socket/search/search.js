@@ -54,7 +54,7 @@ class SearchSocket {
               this.logger.error(err)
             }
             else {
-              const command = `python /home/hamit/via/src/query_example.py ${data.videoId} ${filePath} --min 0.1 --api`
+              const command = `via_search_query_by_example ${data.videoId} ${filePath} --min 0.1 --api`
               exec(command, (err, stdout, _) => {
                 if (err) {
                   ws.send(JSON.stringify({
