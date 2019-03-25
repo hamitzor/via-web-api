@@ -46,7 +46,7 @@ class SearchSocket {
           ws.send(JSON.stringify({
             status: false,
             message: 'videoId is not valid'
-          }))
+          }), (err) => { this.logger(err) })
         }
         else {
           this.saveBase64Image(data.base64Image, (filePath, err) => {
@@ -60,14 +60,15 @@ class SearchSocket {
                   ws.send(JSON.stringify({
                     status: false,
                     message: 'Internal Server Error'
-                  }))
+                  }), (err) => { this.logger(err) })
+
                   this.logger.error(err)
                 }
                 else {
                   ws.send(JSON.stringify({
                     status: true,
                     result: JSON.parse(stdout)
-                  }))
+                  }), (err) => { this.logger(err) })
                 }
               })
             }
