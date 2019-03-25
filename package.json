@@ -1,0 +1,41 @@
+{
+  "name": "via-web-app",
+  "version": "1.0.0",
+  "scripts": {
+    "start": "rm -r -f build dist && webpack --mode development --progress && NODE_ENV=development nodemon build/start_app",
+    "watch": "rm -r -f build dist && webpack --mode development --progress --watch",
+    "build": "rm -r -f build dist && webpack --mode development --progress --profile",
+    "release": "rm -r -f build dist && webpack --mode production --progress --profile"
+  },
+  "repository": "https://github.com/Zeromika/via-web-app",
+  "author": "Hamit Zor <thenrerise@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "body-parser": "^1.18.3",
+    "compression": "^1.7.3",
+    "eslint": "^5.13.0",
+    "express": "^4.16.4",
+    "mongodb": "^3.1.13",
+    "nodemon": "^1.18.10",
+    "universal-cookie": "^3.0.7"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.2.3",
+    "@babel/core": "^7.2.2",
+    "@babel/node": "^7.2.2",
+    "@babel/plugin-proposal-class-properties": "^7.3.0",
+    "@babel/polyfill": "^7.2.5",
+    "@babel/preset-env": "^7.3.1",
+    "@babel/preset-react": "^7.0.0",
+    "assert": "^1.4.1",
+    "babel-eslint": "^10.0.1",
+    "babel-jest": "^24.1.0",
+    "babel-loader": "^8.0.5",
+    "cookie-parser": "^1.4.3",
+    "moment": "^2.24.0",
+    "source-map-support": "^0.5.10",
+    "webpack": "^4.29.0",
+    "webpack-cli": "^3.2.3",
+    "webpack-node-externals": "^1.7.2"
+  }
+}
