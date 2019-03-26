@@ -6,7 +6,7 @@ const searchModuleDirectory = ""
 const config = {
   server: {
     domain: "http://localhost",
-    port: 80
+    port: 3000
   },
   commandPath: {
     queryByExample: `python ${path.resolve(searchModuleDirectory, "src/query_example.py")}`,
