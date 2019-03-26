@@ -1,3 +1,3 @@
-import searchTest from './clientTestScripts/searchTest'
+import searchTest from "./clientTestScripts/searchTest"
 
 searchTest()

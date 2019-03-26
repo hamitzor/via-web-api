@@ -3,12 +3,13 @@ import { exec } from "child_process"
 import crypto from "crypto"
 import fs from "fs"
 import Logger from "../../util/Logger"
+import config from "../../../app.config"
 
 
 class SearchSocket {
   constructor(port) {
     this.port = port
-    this.logger = new Logger("/var/log/via/search")
+    this.logger = new Logger(config.log.directory.search, !config.log.enabled)
   }
 
   saveBase64Image = (image, callback) => {
@@ -42,10 +43,10 @@ class SearchSocket {
       const data = JSON.parse(message)
 
       try {
-        if (typeof data.videoId !== 'number') {
+        if (typeof data.videoId !== "number") {
           ws.send(JSON.stringify({
             status: false,
-            message: 'videoId is not valid'
+            message: "videoId is not valid"
           }), (err) => { if (err) { this.logger.error(err) } })
         }
         else {
@@ -54,12 +55,12 @@ class SearchSocket {
               this.logger.error(err)
             }
             else {
-              const command = `via_search_query_by_example ${data.videoId} ${filePath} --min 0.1 --api`
+              const command = `${config.commandPath.queryByExample} ${data.videoId} ${filePath} --min 0.1 --api`
               exec(command, (err, stdout, _) => {
                 if (err) {
                   ws.send(JSON.stringify({
                     status: false,
-                    message: 'Internal Server Error'
+                    message: "Internal Server Error"
                   }), (err) => { if (err) { this.logger.error(err) } })
 
                   this.logger.error(err)
