@@ -58,7 +58,7 @@ const openTest = () => {
 
       ws.onmessage = function (evt) {
         message.innerHTML = "Query by Example respond is received:"
-        code.innerHTML = JSON.stringify(JSON.parse(evt.data), null, "\t")
+        code.innerHTML = JSON.stringify(JSON.parse(evt.data), null, "   ")
         document.querySelectorAll("pre code").forEach((block) => {
           hljs.highlightBlock(block)
         })
