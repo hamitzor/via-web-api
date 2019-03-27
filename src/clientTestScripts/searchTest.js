@@ -1,3 +1,5 @@
+import config from '../../app.config'
+
 window.SEARCH_ROOT = document.createElement("DIV")
 
 const openTest = () => {
@@ -5,7 +7,7 @@ const openTest = () => {
   //CREATE TEST ELEMENTS
   const endPointInput = document.createElement("INPUT")
   endPointInput.placeholder = "Endpoint URL"
-  endPointInput.value = "localhost:8080"
+  endPointInput.value = `${config.server.domain.replace("http://", "")}:${config.socket.search}`
   const br = document.createElement("BR")
   const fileInput = document.createElement("INPUT")
   fileInput.type = "file"

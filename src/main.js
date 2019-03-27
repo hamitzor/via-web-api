@@ -19,7 +19,7 @@ app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(express.static(path.resolve(__dirname)))
 
-new SearchSocket(8080).start()
+new SearchSocket(config.socket.search).start()
 
 app.get("/", function (req, res) {
   res.send("<a style=\"font-size:1.5rem\" href=\"\/api\">API Test Page</a>")
