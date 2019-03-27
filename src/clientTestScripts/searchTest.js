@@ -17,6 +17,7 @@ const openTest = () => {
   const submitQueryByExample = document.createElement("BUTTON")
   submitQueryByExample.innerHTML = "Search API - Test Query by Example"
   const pre = document.createElement("PRE")
+  pre.style.display = 'inline-block'
   const code = document.createElement("CODE")
   pre.appendChild(code)
   const message = document.createElement("h4")
