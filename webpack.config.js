@@ -14,10 +14,10 @@ const clientConfig = function (env, argv) {
     },
     devtool: "source-map",
     context: path.resolve(__dirname, "src"),
-    entry: "./clientTestMain.js",
+    entry: "./client-test-main.js",
     output: {
       path: path.resolve(__dirname, outputDirectory),
-      filename: "clientTestBundle.js",
+      filename: "client-test-bundle.js",
       publicPath: "/"
     }
   }
@@ -39,7 +39,7 @@ const serverConfig = function (env, argv) {
     entry: "./main.js",
     output: {
       path: path.resolve(__dirname, outputDirectory),
-      filename: "startApp.js",
+      filename: "start-app.js",
     },
     node: {
       __dirname: false

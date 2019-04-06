@@ -2,7 +2,7 @@ import WebSocket from "ws"
 import { exec } from "child_process"
 import crypto from "crypto"
 import fs from "fs"
-import Logger from "../../util/Logger"
+import Logger from "../../util/logger"
 import config from "../../../app.config"
 
 

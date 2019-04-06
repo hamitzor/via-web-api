@@ -5,7 +5,7 @@ import cookieParser from "cookie-parser"
 import bodyParser from "body-parser"
 import compression from "compression"
 import path from "path"
-import SearchSocket from "./socket/SearchSocket"
+import SearchSocket from "./socket/search-socket"
 import config from "../app.config"
 
 const app = express()

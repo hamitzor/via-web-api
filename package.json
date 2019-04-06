@@ -2,7 +2,7 @@
   "name": "via-web-app",
   "version": "1.0.0",
   "scripts": {
-    "start": "rm -r -f build dist && webpack --mode development --progress && NODE_ENV=development nodemon build/startApp",
+    "start": "rm -r -f build dist && webpack --mode development --progress && NODE_ENV=development nodemon build/start-app",
     "watch": "rm -r -f build dist && webpack --mode development --progress --watch",
     "build": "rm -r -f build dist && webpack --mode development --progress --profile",
     "release": "rm -r -f build dist && webpack --mode production --progress --profile"
