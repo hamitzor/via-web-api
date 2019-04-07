@@ -14,7 +14,7 @@ class SearchSocket {
 
   start = () => {
     // Start socket on specified port
-    const search_socket = new WebSocket.Server({ port: this.port })
+    const searchSocket = new WebSocket.Server({ port: this.port })
 
     const onMessage = async (ws, message) => {
       const data = JSON.parse(message)
@@ -45,7 +45,7 @@ class SearchSocket {
     }
 
 
-    search_socket.on("connection", (ws) => {
+    searchSocket.on("connection", (ws) => {
       ws.on("message", (message) => {
         onMessage(ws, message)
       })

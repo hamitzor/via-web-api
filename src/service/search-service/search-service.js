@@ -6,26 +6,22 @@ class SearchService {
     this.commonOptions = commonOptions ? commonOptions : {}
   }
 
-  _stringifyOptions = (options) => {
-    let str = ""
-    options = { ...options, ...this.commonOptions }
-    Object.keys(options).forEach((optionName) => {
-      const optionValue = options[optionName]
-      if (typeof optionValue === "boolean" && optionValue) {
-        str = `${str} --${optionName}`
+  _stringifyOptions = (options) => Object.keys(options).reduce((acc, optionName) => {
+    const optionValue = options[optionName]
+    if (typeof optionValue === "boolean" && optionValue) {
+      acc = `${acc} --${optionName}`
+    }
+    else {
+      if (optionValue) {
+        acc = `${acc} --${optionName} ${optionValue}`
       }
-      else {
-        if (optionValue) {
-          str = `${str} --${optionName} ${optionValue}`
-        }
-      }
-    })
-    return str
-  }
+    }
+    return acc
+  }, "")
 
   queryByExample = (videoId, exampleFile, options) => {
     return new Promise((resolve, reject) => {
-      const command = `${config.commandPath.queryByExample} ${videoId} ${exampleFile} ${this._stringifyOptions(options)}`
+      const command = `${config.commandPath.queryByExample} ${videoId} ${exampleFile} ${this._stringifyOptions({ ...options, ...this.commonOptions })}`
       exec(command, (err, stdout, _) => {
         if (err) {
           reject(err)
