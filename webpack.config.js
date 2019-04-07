@@ -1,31 +1,31 @@
 const path = require("path")
 const nodeExternals = require("webpack-node-externals")
 
+const clientCommonConfigs = {
+  module: {
+    rules: [
+      { test: /\.js$/, exclude: /node_modules/, loader: "babel-loader" }
+    ]
+  },
+  devtool: "source-map",
+  context: path.resolve(__dirname, "client-test-scripts"),
+}
 
-const clientConfig = function (env, argv) {
+const searchTestScriptConfig = function (env, argv) {
   const mode = argv.mode
-  const outputDirectory = mode === "production" ? "dist" : "build"
   return {
     mode: mode,
-    module: {
-      rules: [
-        { test: /\.js$/, exclude: /node_modules/, loader: "babel-loader" }
-      ]
-    },
-    devtool: "source-map",
-    context: path.resolve(__dirname, "src"),
-    entry: "./client-test-main.js",
+    ...clientCommonConfigs,
+    entry: "./search-test-script.js",
     output: {
-      path: path.resolve(__dirname, outputDirectory),
-      filename: "client-test-bundle.js",
-      publicPath: "/"
+      path: path.resolve(__dirname, "build"),
+      filename: "search-test-script-bundle.js",
     }
   }
 }
 
 const serverConfig = function (env, argv) {
   const mode = argv.mode
-  const outputDirectory = mode === "production" ? "dist" : "build"
   return {
     mode: mode,
     module: {
@@ -38,7 +38,7 @@ const serverConfig = function (env, argv) {
     context: path.resolve(__dirname, "src"),
     entry: "./main.js",
     output: {
-      path: path.resolve(__dirname, outputDirectory),
+      path: path.resolve(__dirname, "build"),
       filename: "start-app.js",
     },
     node: {
@@ -49,4 +49,4 @@ const serverConfig = function (env, argv) {
 }
 
 
-module.exports = [clientConfig, serverConfig]
+module.exports = [searchTestScriptConfig, serverConfig]

@@ -6,7 +6,7 @@ class SearchService {
     this.commonOptions = commonOptions ? commonOptions : {}
   }
 
-  stringifyOptions = (options) => {
+  _stringifyOptions = (options) => {
     let str = ""
     options = { ...options, ...this.commonOptions }
     Object.keys(options).forEach((optionName) => {
@@ -23,8 +23,7 @@ class SearchService {
 
   queryByExample = (videoId, exampleFile, options) => {
     return new Promise((resolve, reject) => {
-      const command = `${config.commandPath.queryByExample} ${videoId} ${exampleFile} ${this.stringifyOptions(options)}`
-      console.log(command)
+      const command = `${config.commandPath.queryByExample} ${videoId} ${exampleFile} ${this._stringifyOptions(options)}`
       exec(command, (err, stdout, _) => {
         if (err) {
           reject(err)

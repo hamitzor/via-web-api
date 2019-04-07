@@ -22,11 +22,15 @@ app.use(express.static(path.resolve(__dirname)))
 new SearchSocket(config.socket.search).start()
 
 app.get("/", function (req, res) {
-  res.send("<a style=\"font-size:1.5rem\" href=\"\/api\">API Test Page</a>")
+  res.sendFile(path.resolve(__dirname, "../client-test-pages/home.html"))
 })
 
-app.get("/api", function (req, res) {
-  res.sendFile(path.resolve(__dirname, "../api-test.html"))
+app.get("/test", function (req, res) {
+  res.sendFile(path.resolve(__dirname, "../client-test-pages/test-page-home.html"))
+})
+
+app.get("/test/search-test", function (req, res) {
+  res.sendFile(path.resolve(__dirname, "../client-test-pages/test-page-search.html"))
 })
 
 app.listen(port, () => {

@@ -7,7 +7,7 @@ yarn-error.log*
 
 *.out
 app.config.js
-src/**/api_example/
+src/**/api-example/
 dist/
 build/
 yarn.lock

@@ -8,28 +8,20 @@ import clc from "cli-color"
 class Logger {
 
   constructor(directory = "/var/log", supress = false) {
-    this.directory = directory
-    this.supress = supress
+    this._directory = directory
+    this._supress = supress
   }
 
-  date = () => moment().format("DD_MM_YYYY")
-  time = () => moment().format("LTS")
-  path = () => path.resolve(this.directory, `${this.date()}.log`)
+  _date = () => moment().format("DD_MM_YYYY")
+  _time = () => moment().format("LTS")
+  _path = () => path.resolve(this._directory, `${this._date()}.log`)
 
 
-  info = (message) => {
-    !this.supress && this.log(message)
-  }
+  _log = async (message) => {
+    const time = this._time()
+    const path = this._path()
 
-  error = (errorObject) => {
-    !this.supress && this.log(`ERROR - ${errorObject.message}\nstacktrace: ${errorObject.stack}`)
-  }
-
-  log = async (message) => {
-    const time = this.time()
-    const path = this.path()
-
-    !this.supress && fs.appendFile(path, `${time} : ${message}\n`,
+    !this._supress && fs.appendFile(path, `${time} : ${message}\n`,
       err => {
         if (err) {
           console.log(clc.red(
@@ -42,6 +34,17 @@ class Logger {
         }
       })
   }
+
+
+  info = (message) => {
+    !this._supress && this._log(message)
+  }
+
+  error = (errorObject) => {
+    !this._supress && this._log(`ERROR - ${errorObject.message}\nstacktrace: ${errorObject.stack}`)
+  }
+
+
 }
 
 

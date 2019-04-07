@@ -1,0 +1,59 @@
+import config from '../app.config'
+
+const qbeTest = () => {
+  const qbe = {
+    endPoint: document.getElementById("qbe-end-point"),
+    videoId: document.getElementById("qbe-video-id"),
+    example: document.getElementById("qbe-example"),
+    submit: document.getElementById("qbe-submit"),
+    message: document.getElementById("qbe-message"),
+    result: document.getElementById("qbe-result")
+  }
+
+  qbe.endPoint.value = `${config.server.domain.replace("http://", "")}:${config.socket.search}`
+
+  qbe.submit.onclick = () => {
+
+    const endPoint = qbe.endPoint.value
+    const file = qbe.example.files[0]
+    const filePath = qbe.example.value
+    const videoId = parseInt(qbe.videoId.value)
+    const reader = new FileReader()
+
+    if (!file) {
+      alert("Upload an example image!")
+      return
+    }
+
+
+    reader.onloadend = function () {
+      const data = {
+        videoId,
+        base64Image: reader.result
+      }
+
+      const ws = new WebSocket(`ws:${endPoint}`)
+
+      ws.onopen = function () {
+        ws.send(JSON.stringify(data))
+        qbe.message.innerHTML = `Query by Example request sent with parameters videoId = ${videoId} image = ${filePath} waiting for response...`
+        qbe.result.innerHTML = ""
+      }
+
+      ws.onmessage = function (evt) {
+        qbe.message.innerHTML = "Query by Example respond is received:"
+        qbe.result.innerHTML = JSON.stringify(JSON.parse(evt.data), null, "   ")
+        hljs.highlightBlock(qbe.result)
+      }
+
+      ws.onclose = function () {
+        qbe.message.innerHTML = "Connection is closed"
+      }
+    }
+    reader.readAsDataURL(file)
+  }
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  qbeTest()
+})
