@@ -1,5 +1,7 @@
 import crypto from "crypto"
 import fs from "fs"
+import config from "../../app.config"
+import path from "path"
 
 const saveBase64Image = (image) => {
   return new Promise((resolve, reject) => {
@@ -16,16 +18,17 @@ const saveBase64Image = (image) => {
     const type = (matches[1].match(/\/(.*?)$/))[1]
 
     const name = crypto.randomBytes(64).toString("hex")
-    const directory = "/tmp/"
-    const path = `${directory}${name}.${type}`
+    const directory = config.temporaryDirectory
+
+    const savePath = path.resolve(directory, `${name}.${type}`)
 
     // Save image to disk
-    fs.writeFile(path, content, (err) => {
+    fs.writeFile(savePath, content, (err) => {
       if (err) {
         reject(err)
       }
       else {
-        resolve(path)
+        resolve(savePath)
       }
     })
   })

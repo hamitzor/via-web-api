@@ -20,7 +20,8 @@ const config = {
     directory: {
       search: "/var/log/via/search"
     }
-  }
+  },
+  temporaryDirectory: '/tmp'
 }
 
 export default config
