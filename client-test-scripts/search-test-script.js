@@ -13,9 +13,13 @@ const qbeTest = () => {
     end: document.getElementById("qbe-end"),
   }
 
+  let ws = undefined
+
   qbe.endPoint.value = `${config.server.domain.replace("http://", "")}:${config.socket.search}`
 
   qbe.submit.onclick = () => {
+
+    ws && ws.close()
 
     const endPoint = qbe.endPoint.value
     const file = qbe.example.files[0]
@@ -38,7 +42,7 @@ const qbeTest = () => {
         end: parseInt(qbe.end.value)
       }
 
-      const ws = new WebSocket(`ws:${endPoint}`)
+      ws = new WebSocket(`ws:${endPoint}`)
 
       ws.onopen = function () {
         ws.send(JSON.stringify(data))
