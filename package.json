@@ -2,10 +2,10 @@
   "name": "via-web-app",
   "version": "1.0.0",
   "scripts": {
-    "start": "rm -r -f build && webpack --mode development --progress && NODE_ENV=development nodemon build/start-app",
-    "watch": "rm -r -f build && webpack --mode development --progress --watch",
-    "build": "rm -r -f build && webpack --mode development --progress --profile",
-    "release": "rm -r -f build && webpack --mode production --progress --profile"
+    "start": "webpack --mode development --progress && nodemon build/start-app",
+    "watch": "webpack --mode development --progress --watch",
+    "build": "webpack --mode development --progress --profile",
+    "release": "webpack --mode production --progress --profile"
   },
   "repository": "https://github.com/Zeromika/via-web-app",
   "author": "Hamit Zor <thenrerise@gmail.com>",
