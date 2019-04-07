@@ -7,7 +7,10 @@ const qbeTest = () => {
     example: document.getElementById("qbe-example"),
     submit: document.getElementById("qbe-submit"),
     message: document.getElementById("qbe-message"),
-    result: document.getElementById("qbe-result")
+    result: document.getElementById("qbe-result"),
+    min: document.getElementById("qbe-min"),
+    begin: document.getElementById("qbe-begin"),
+    end: document.getElementById("qbe-end"),
   }
 
   qbe.endPoint.value = `${config.server.domain.replace("http://", "")}:${config.socket.search}`
@@ -29,7 +32,10 @@ const qbeTest = () => {
     reader.onloadend = function () {
       const data = {
         videoId,
-        base64Image: reader.result
+        base64Image: reader.result,
+        min: parseFloat(qbe.min.value),
+        begin: parseInt(qbe.begin.value),
+        end: parseInt(qbe.end.value)
       }
 
       const ws = new WebSocket(`ws:${endPoint}`)

@@ -25,13 +25,26 @@
 <body>
   <h2>VIA API - Search - Test</h2>
   <div id="qbe-root">
-    <label for="qbe-end-point">End Point Url:</label><br />
+    <label for="qbe-end-point">End point url:</label><br />
     <input id="qbe-end-point"><br /><br />
+
     <label for="qbe-video-id">Video ID:</label><br />
     <input id="qbe-video-id" type="number" value="1"><br /><br />
-    <label for="qbe-example">Example Image File:</label><br />
+
+    <label for="qbe-example">Example image file:</label><br />
     <input id="qbe-example" type="file"><br /><br />
+
+    <label for="qbe-min">Minimum similarity (between 0.1 and 1):</label><br />
+    <input id="qbe-min" type="number" value="0.1"><br /><br />
+
+    <label>Search between seconds</label><br /><br />
+    <label for="qbe-begin">From:</label><br />
+    <input id="qbe-begin" type="number" value="0"><br /><br />
+    <label for="qbe-end">To:</label><br />
+    <input id="qbe-end" type="number" value="60"><br /><br />
+
     <button id="qbe-submit">Test Query by Example</button>
+
     <h4 id="qbe-message"></h4>
     <pre><code id="qbe-result"></code></pre>
   </div>

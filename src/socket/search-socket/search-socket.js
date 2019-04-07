@@ -28,7 +28,7 @@ class SearchSocket {
         }
         else {
           const savedImagePath = await saveBase64Image(data.base64Image)
-          const result = await this._service.queryByExample(data.videoId, savedImagePath)
+          const result = await this._service.queryByExample(data.videoId, savedImagePath, { min: data.min, begin: data.begin, end: data.end })
           ws.send(JSON.stringify({
             status: true,
             result

@@ -15,7 +15,9 @@ class SearchService {
         str = `${str} --${optionName}`
       }
       else {
-        str = `${str} --${optionName} ${optionValue}`
+        if (optionValue) {
+          str = `${str} --${optionName} ${optionValue}`
+        }
       }
     })
     return str
