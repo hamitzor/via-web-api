@@ -1,3 +1,8 @@
+/**
+ * @fileoverview Function to save Base64 encoded images.
+ * @author thenrerise@gmail.com (Hamit Zor)
+ */
+
 import crypto from "crypto"
 import fs from "fs"
 import config from "../../app.config"
@@ -5,7 +10,7 @@ import path from "path"
 
 const saveBase64Image = (image) => {
   return new Promise((resolve, reject) => {
-    const matches = image.match(/^data:([A-Za-z-+\/]+);base64,(.+)$/)
+    const matches = image.match(/^data:([A-Za-z-+/]+);base64,(.+)$/)
 
     if (matches.length !== 3) {
       reject(new Error("Invalid input string"))

@@ -1,4 +1,10 @@
+/**
+ * @fileoverview Test script to be used in search socket test page.
+ * @author thenrerise@gmail.com (Hamit Zor)
+ */
+
 import config from '../app.config'
+import hljs from 'highlightjs'
 
 const qbeTest = () => {
   const qbe = {

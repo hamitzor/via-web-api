@@ -1,3 +1,8 @@
+/**
+ * @fileoverview Logger class that handles logging.
+ * @author thenrerise@gmail.com (Hamit Zor)
+ */
+
 import fs from "fs"
 import path from "path"
 import moment from "moment"

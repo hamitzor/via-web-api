@@ -18,7 +18,7 @@ const searchTestScriptConfig = function (env, argv) {
     ...clientCommonConfigs,
     entry: "./search-test-script.js",
     output: {
-      path: path.resolve(__dirname, "build"),
+      path: path.resolve(__dirname, "lib"),
       filename: "search-test-script-bundle.js",
     }
   }
@@ -35,10 +35,10 @@ const serverConfig = function (env, argv) {
     },
     target: "node",
     devtool: "source-map",
-    context: path.resolve(__dirname, "src"),
+    context: path.resolve(__dirname, "app"),
     entry: "./main.js",
     output: {
-      path: path.resolve(__dirname, "build"),
+      path: path.resolve(__dirname, "lib"),
       filename: "start-app.js",
     },
     node: {

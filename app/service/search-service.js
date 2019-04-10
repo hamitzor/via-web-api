@@ -1,5 +1,10 @@
+/**
+ * @fileoverview Service class for handling system calls deals with search operations.
+ * @author thenrerise@gmail.com (Hamit Zor)
+ */
+
 import { exec } from "child_process"
-import config from "../../../app.config"
+import config from "../../app.config"
 
 class SearchService {
   constructor(commonOptions) {
@@ -22,7 +27,7 @@ class SearchService {
   queryByExample = (videoId, exampleFile, options) => {
     return new Promise((resolve, reject) => {
       const command = `${config.commandPath.queryByExample} ${videoId} ${exampleFile} ${this._stringifyOptions({ ...options, ...this.commonOptions })}`
-      exec(command, (err, stdout, _) => {
+      exec(command, (err, stdout) => {
         if (err) {
           reject(err)
         }
