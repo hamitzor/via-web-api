@@ -5,10 +5,12 @@ import cookieParser from "cookie-parser"
 import bodyParser from "body-parser"
 import compression from "compression"
 import path from "path"
-import SearchWebSocketInitializer from "./web-socket/search-web-socket-initializer"
+import SearchWebSocketServerInitializer from "./web-socket/search-web-socket-server-initializer"
 import config from "../app.config"
+import http from "http"
 
 const app = express()
+const server = http.createServer(app)
 const port = config.server.port
 const domain = config.server.domain
 
@@ -19,7 +21,7 @@ app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(express.static(path.resolve(__dirname)))
 
-new SearchWebSocketInitializer(config.socket.search).attachHandlers()
+new SearchWebSocketServerInitializer(server).attachHandlers()
 
 app.get("/", function (req, res) {
   res.sendFile(path.resolve(__dirname, "../client-test-pages/home.html"))
@@ -33,6 +35,6 @@ app.get("/test/search-test", function (req, res) {
   res.sendFile(path.resolve(__dirname, "../client-test-pages/test-page-search.html"))
 })
 
-app.listen(port, () => {
+server.listen(port, () => {
   console.log(`Application is online at ${domain}:${port}`)
 })

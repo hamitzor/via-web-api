@@ -21,7 +21,7 @@ const qbeTest = () => {
 
   let ws = undefined
 
-  qbe.endPoint.value = `${config.server.domain.replace("http://", "")}:${config.socket.search}`
+  qbe.endPoint.value = `${config.server.domain.replace("http://", "")}:${config.server.port}`
 
   qbe.submit.onclick = () => {
 
