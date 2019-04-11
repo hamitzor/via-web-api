@@ -12,20 +12,12 @@ module.exports = {
   "parserOptions": {
     "ecmaVersion": 2018,
     "sourceType": "module"
-  }, 
+  },
   "rules": {
-    "indent": [
-      "error",
-      2
-    ],
-    "linebreak-style": [
-      "error",
-      "unix"
-    ],
-    "semi": [
-      "error",
-      "never"
-    ],
+    "quotes": ["error", "double"],
+    "indent": ["error", 2],
+    "linebreak-style": ["error", "unix"],
+    "semi": ["error", "never"],
     "no-console": "off",
     "no-inline-comments": "off",
   }
