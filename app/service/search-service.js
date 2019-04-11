@@ -24,9 +24,13 @@ class SearchService {
     return acc
   }, "")
 
-  queryByExample = (videoId, exampleFile, options) => {
+  QBE = (videoId, exampleFile, options) => {
     return new Promise((resolve, reject) => {
-      const command = `${config.commandPath.queryByExample} ${videoId} ${exampleFile} ${this._stringifyOptions({ ...options, ...this.commonOptions })}`
+      if (typeof videoId !== "number") {
+        reject("videoId is not valid")
+      }
+      const stringifiedOptions = this._stringifyOptions({ ...options, ...this.commonOptions })
+      const command = `${config.commandPath.queryByExample} ${videoId} ${exampleFile} ${stringifiedOptions}`
       exec(command, (err, stdout) => {
         if (err) {
           reject(err)

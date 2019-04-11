@@ -5,7 +5,7 @@ import cookieParser from "cookie-parser"
 import bodyParser from "body-parser"
 import compression from "compression"
 import path from "path"
-import SearchSocket from "./socket/search-socket"
+import SearchWebSocketInitializer from "./web-socket/search-web-socket-initializer"
 import config from "../app.config"
 
 const app = express()
@@ -19,7 +19,7 @@ app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(express.static(path.resolve(__dirname)))
 
-new SearchSocket(config.socket.search).start()
+new SearchWebSocketInitializer(config.socket.search).attachHandlers()
 
 app.get("/", function (req, res) {
   res.sendFile(path.resolve(__dirname, "../client-test-pages/home.html"))

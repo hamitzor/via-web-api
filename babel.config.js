@@ -6,7 +6,6 @@ module.exports = {
         "useBuiltIns": "entry",
         "corejs": 3,
         "targets": {
-          "browsers": "> 1%, not op_mini all",
           "node": 11
         }
       }
