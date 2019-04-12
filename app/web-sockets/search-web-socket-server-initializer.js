@@ -4,10 +4,11 @@
  */
 
 import saveBase64Image from "../util/save-base64-image"
-import SearchService from "../service/search-service"
+import SearchService from "../services/search-service"
 import Logger from "../util/logger"
 import config from "../../app.config"
 import WebSocket from "ws"
+import WebSocketCannotSendMessageError from "../errors/web-socket-cannot-send-message-error"
 
 class SearchWebSocketServerInitializer {
   constructor(server) {
@@ -24,19 +25,31 @@ class SearchWebSocketServerInitializer {
       const exampleImageFilepath = await saveBase64Image(data.base64Image)
       const options = { min: data.min, begin: data.begin, end: data.end }
       const result = await this._service.QBE(videoId, exampleImageFilepath, options)
-      const resultJSONString = JSON.stringify({
+
+      webSocket.send(JSON.stringify({
         status: true,
         result
+      }), err => {
+        if (err) {
+          throw new WebSocketCannotSendMessageError(err.message)
+        }
       })
-
-      webSocket.send(resultJSONString,
-        err => {
-          if (err) { throw err }
-        })
-
     } catch (err) {
-      webSocket.close()
-      this._logger.error(err)
+      if (err instanceof WebSocketCannotSendMessageError) {
+        this._logger.error(err)
+        webSocket.close()
+      }
+      else {
+        webSocket.send(JSON.stringify({
+          status: false,
+          message: "Internal Server Error"
+        }), err => {
+          if (err) {
+            this._logger.error(err)
+            webSocket.close()
+          }
+        })
+      }
     }
   }
 

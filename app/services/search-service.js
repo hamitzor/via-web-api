@@ -8,7 +8,7 @@ import config from "../../app.config"
 
 class SearchService {
   constructor(commonOptions) {
-    this.commonOptions = commonOptions ? commonOptions : {}
+    this._commonOptions = commonOptions ? commonOptions : {}
   }
 
   _stringifyOptions = (options) => Object.keys(options).reduce((acc, optionName) => {
@@ -29,7 +29,7 @@ class SearchService {
       if (typeof videoId !== "number") {
         reject("videoId is not valid")
       }
-      const stringifiedOptions = this._stringifyOptions({ ...options, ...this.commonOptions })
+      const stringifiedOptions = this._stringifyOptions({ ...options, ...this._commonOptions })
       const command = `${config.commandPath.queryByExample} ${videoId} ${exampleFile} ${stringifiedOptions}`
       exec(command, (err, stdout) => {
         if (err) {
