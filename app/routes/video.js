@@ -1,19 +1,20 @@
 /**
  * @author kgnugur@gmail.com (Kagan Ugur)
  */
-import express from 'express';
 
-const router = express.Router();
+import express from "express"
+import * as videoControllers from "../controllers/video"
 
-router.get('/video', (req, res) => {
-  //Return all videos
-  res.send('Video route');
-});
+const router = express.Router()
 
-router.post('/video', (req, res) => {});
+router.get("/", videoControllers.getVideos)
 
-router.delete('video', (req, res) => {});
+router.get("/:videoId", videoControllers.getVideo)
 
-router.put('video', (req, res) => {});
+router.post("/", videoControllers.postVideo)
 
-export default router;
+router.delete("/", videoControllers.deleteVideo)
+
+router.put("/", videoControllers.putVideo)
+
+export default router

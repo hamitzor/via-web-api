@@ -23,23 +23,23 @@ app.use(express.static(path.resolve(__dirname)))
 
 new SearchWebSocketServerInitializer(server).attachHandlers()
 
-app.get("/", function (req, res) {
+app.get("/", function(req, res) {
   res.sendFile(path.resolve(__dirname, "../client-test-pages/home.html"))
 })
 
-app.get("/test", function (req, res) {
+app.get("/test", function(req, res) {
   res.sendFile(
     path.resolve(__dirname, "../client-test-pages/test-page-home.html")
   )
 })
 
-app.get("/test/search-test", function (req, res) {
+app.get("/test/search-test", function(req, res) {
   res.sendFile(
     path.resolve(__dirname, "../client-test-pages/test-page-search.html")
   )
 })
 
-app.use(videoRoutes)
+app.use("/video", videoRoutes)
 
 server.listen(port, () => {
   console.log(`Application is online at ${domain}:${port}`)
