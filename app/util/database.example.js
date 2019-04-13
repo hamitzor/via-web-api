@@ -5,5 +5,8 @@ const pool = mysql.createPool({
   host: "localhost",
   user: "root",
   password: "",
-  database: "via"
+  database: ""
 })
+
+// now get a Promise wrapped instance of that pool
+export default pool.promise()

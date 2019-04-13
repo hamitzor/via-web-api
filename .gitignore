@@ -21,4 +21,4 @@ node_modules/
 # dotenv environment variables file
 .env
 
-util/database.js
+app/util/database.js
