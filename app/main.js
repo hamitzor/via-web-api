@@ -11,14 +11,14 @@ import http from "http"
 import videoRoutes from "./routes/video"
 
 // **TEST
-import db from "./util/database"
-db.execute("SELECT * FROM Videos")
-  .then(() => {
-    console.log(err)
-  })
-  .catch(err => {
-    console.log(err)
-  })
+// import db from "./util/database"
+// db.execute("SELECT * FROM Videos")
+//   .then(data => {
+//     console.log(data)
+//   })
+//   .catch(err => {
+//     console.log(err)
+//   })
 // TEST**
 
 const app = express()
