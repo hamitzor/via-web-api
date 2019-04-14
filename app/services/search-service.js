@@ -29,7 +29,7 @@ class SearchService {
   }, "")
 
 
-  qbe = (videoId, exampleFile, options) => {
+  queryByExample = (videoId, exampleFile, options) => {
     return new Promise((resolve, reject) => {
       const stringifiedOptions = this._stringifyOptions({ ...options, ...this._commonOptions })
       const command = `${config.commandPath.queryByExample} ${videoId} ${exampleFile} ${stringifiedOptions}`
@@ -44,7 +44,7 @@ class SearchService {
     })
   }
 
-  esf = (videoId, options) => {
+  extractSearchFeatures = (videoId, options) => {
     return new Promise((resolve, reject) => {
       const stringifiedOptions = this._stringifyOptions({ ...options, ...this._commonOptions })
       const command = `${config.commandPath.extractFeature} ${videoId} ${stringifiedOptions}`

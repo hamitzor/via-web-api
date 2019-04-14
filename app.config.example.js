@@ -8,10 +8,6 @@ const config = {
     domain: "http://localhost",
     port: 3000
   },
-  socketPorts: {
-    qbe: 8100,
-    esf: 8101
-  },
   database: {
     host: "localhost",
     username: "root",
@@ -25,7 +21,10 @@ const config = {
   log: {
     enabled: true,
     directory: {
-      search: "/var/log/via/search"
+      search: "/var/log/via/search",
+      wssRouter: "/var/log/via/wss-router",
+      wssInitializer: "/var/log/via/wss-initializer",
+      wssSearchController: "/var/log/via/wss-search"
     }
   },
   temporaryDirectory: "/tmp"

@@ -18,10 +18,10 @@ const qbeTest = () => {
     begin: document.getElementById("qbe-begin"),
     end: document.getElementById("qbe-end"),
   }
-  
+
   let ws = undefined
 
-  qbe.endPoint.value = `${config.server.domain.replace("http://", "")}:${config.socketPorts.qbe}`
+  qbe.endPoint.value = `${config.server.domain.replace("http://", "")}:${config.server.port}`
 
   qbe.submit.onclick = () => {
 
@@ -51,7 +51,7 @@ const qbeTest = () => {
       ws = new WebSocket(`ws:${endPoint}`)
 
       ws.onopen = function () {
-        ws.send(JSON.stringify(data))
+        ws.send(JSON.stringify({ route: "search-query-by-example", data }))
         qbe.message.innerHTML = `Query by Example request sent with parameters videoId = ${videoId} image = ${filePath} waiting for response...`
         qbe.result.innerHTML = ""
       }
@@ -84,7 +84,7 @@ const esfTest = () => {
 
   let ws = undefined
 
-  esf.endPoint.value = `${config.server.domain.replace("http://", "")}:${config.socketPorts.esf}`
+  esf.endPoint.value = `${config.server.domain.replace("http://", "")}:${config.server.port}`
 
   esf.submit.onclick = () => {
 
@@ -102,7 +102,7 @@ const esfTest = () => {
     ws = new WebSocket(`ws:${endPoint}`)
 
     ws.onopen = function () {
-      ws.send(JSON.stringify(data))
+      ws.send(JSON.stringify({ route: "search-extract-search-features", data }))
       esf.message.innerHTML = `Extract Search Features request sent with parameters videoId = ${videoId} waiting for response...`
       esf.result.innerHTML = ""
     }

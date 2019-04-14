@@ -5,8 +5,7 @@ import cookieParser from "cookie-parser"
 import bodyParser from "body-parser"
 import compression from "compression"
 import path from "path"
-import QBESocketServerInitializer from "./web-sockets/qbe-socket-server-initializer"
-import ESFSocketServerInitializer from "./web-sockets/esf-socket-server-initializer"
+import WSSInitializer from "./web-socket/wss-initializer"
 import config from "../app.config"
 import http from "http"
 import videoRoutes from "./routes/video"
@@ -33,8 +32,7 @@ app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(express.static(path.resolve(__dirname)))
 
-new QBESocketServerInitializer(config.socketPorts.qbe).attachHandlers()
-new ESFSocketServerInitializer(config.socketPorts.esf).attachHandlers()
+new WSSInitializer(server).attachHandlers()
 
 app.get("/", function (req, res) {
   res.sendFile(path.resolve(__dirname, "../client-test-pages/home.html"))
