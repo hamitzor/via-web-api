@@ -6,13 +6,15 @@
 import SearchService from "../../services/search-service"
 import Logger from "../../util/logger"
 import config from "../../../app.config"
-import saveBase64Image from "../../util/save-base64-image"
+import VideoModel from "../../models/video"
+import SearchOperationModel from "../../models/search-operation-model"
 
 
 class WSSSearchController {
   constructor() {
     this._service = new SearchService({ api: true })
-    this._logger = new Logger(config.log.directory.wssSearchController, !config.log.enabled)
+    this._logger = new Logger(config.log.directory.wss, !config.log.enabled)
+    this._searchOperationModel = new SearchOperationModel()
   }
 
   _sendError = (webSocket, errorMessage) => {
@@ -27,30 +29,27 @@ class WSSSearchController {
     })
   }
 
-  extractSearchFeatures = async (webSocket, data) => {
+  watchExtractSearchFeatures = async (webSocket, data) => {
     try {
       const videoId = data.videoId
-      const options = { begin: data.begin, end: data.end }
-      this._service.extractSearchFeatures(videoId, options)
 
-      //@TODO: implement real logic. get process percentage and inform client.
-      let process = 0
-
-      const interval = setInterval(() => {
-        if (process > 100) {
-          clearInterval(interval)
-        }
+      const interval = setInterval(async () => {
+        const progress = (await VideoModel.fetchById(videoId))[0][0].search_process_progress
         webSocket.send(JSON.stringify({
           status: true,
-          process: process
+          progress
         }), err => {
-          process = process + 10
           if (err) {
             this._logger.error(err)
             webSocket.close()
           }
+          else {
+            if (progress === 100) {
+              clearInterval(interval)
+            }
+          }
         })
-      }, 1000)
+      }, 500)
 
     } catch (err) {
       this._logger.error(err)
@@ -58,22 +57,28 @@ class WSSSearchController {
     }
   }
 
-  queryByExample = async (webSocket, data) => {
+  watchQueryByExample = async (webSocket, data) => {
     try {
-      const videoId = data.videoId
-      const exampleImageFilepath = await saveBase64Image(data.base64Image)
-      const options = { min: data.min, begin: data.begin, end: data.end }
-      const result = await this._service.queryByExample(videoId, exampleImageFilepath, options)
+      const id = data.searchOperationId
 
-      webSocket.send(JSON.stringify({
-        status: true,
-        result
-      }), err => {
-        if (err) {
-          this._logger.error(err)
-          webSocket.close()
-        }
-      })
+      const interval = setInterval(async () => {
+        const searchOperation = (await this._searchOperationModel.get(id))[0]
+        webSocket.send(JSON.stringify({
+          status: true,
+          data: searchOperation
+        }), err => {
+          if (err) {
+            this._logger.error(err)
+            webSocket.close()
+          }
+          else {
+            if (searchOperation.progress === 100) {
+              clearInterval(interval)
+            }
+          }
+        })
+      }, 500)
+
     } catch (err) {
       this._logger.error(err)
       this._sendError(webSocket, "Internal Server Error")

@@ -15,6 +15,7 @@
     "cli-color": "^1.4.0",
     "compression": "^1.7.3",
     "express": "^4.16.4",
+    "formidable": "^1.2.1",
     "highlightjs": "^9.12.0",
     "mongodb": "^3.1.13",
     "mysql2": "^1.6.5",

@@ -6,14 +6,14 @@ class WSSRouter {
     this._logger = logger
     this._searchController = new WSSSearchController()
     this._routes = {
-      ["search-query-by-example"]: this._searchController.queryByExample,
-      ["search-extract-search-features"]: this._searchController.extractSearchFeatures
+      ["watch-query-by-example"]: this._searchController.watchQueryByExample,
+      ["watch-extract-search-features"]: this._searchController.watchExtractSearchFeatures
     }
   }
 
-  use = (webSocket, routeName, data) => {
-    if (routeName !== "use") {
-      const requestedController = this._routes[routeName]
+  use = (webSocket, route, data) => {
+    if (route !== "use") {
+      const requestedController = this._routes[route]
       if (typeof requestedController !== "function") {
         webSocket.send(JSON.stringify({
           status: false,

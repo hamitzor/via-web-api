@@ -21,7 +21,7 @@ class SearchService {
       acc = `${acc} --${optionName}`
     }
     else {
-      if (optionValue) {
+      if (optionValue && optionValue !== "NaN") {
         acc = `${acc} --${optionName} ${optionValue}`
       }
     }
@@ -29,16 +29,21 @@ class SearchService {
   }, "")
 
 
-  queryByExample = (videoId, exampleFile, options) => {
+  queryByExample = (videoId, exampleFilePath, options) => {
     return new Promise((resolve, reject) => {
       const stringifiedOptions = this._stringifyOptions({ ...options, ...this._commonOptions })
-      const command = `${config.commandPath.queryByExample} ${videoId} ${exampleFile} ${stringifiedOptions}`
-      exec(command, (err, stdout) => {
+      const command = `${config.commandPath.queryByExample} ${videoId} ${exampleFilePath} ${stringifiedOptions}`
+      exec(command, (err, stdout, stderr) => {
         if (err) {
           reject(err)
         }
         else {
-          resolve(JSON.parse(stdout))
+          if (stderr) {
+            reject(stderr)
+          }
+          else {
+            resolve(JSON.parse(stdout))
+          }
         }
       })
     })
@@ -48,12 +53,17 @@ class SearchService {
     return new Promise((resolve, reject) => {
       const stringifiedOptions = this._stringifyOptions({ ...options, ...this._commonOptions })
       const command = `${config.commandPath.extractFeature} ${videoId} ${stringifiedOptions}`
-      exec(command, (err) => {
+      exec(command, (err, stdout, stderr) => {
         if (err) {
           reject(err)
         }
         else {
-          resolve()
+          if (stderr) {
+            reject(stderr)
+          }
+          else {
+            resolve()
+          }
         }
       })
     })

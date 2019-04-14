@@ -20,5 +20,6 @@ module.exports = {
     "semi": ["error", "never"],
     "no-console": "off",
     "no-inline-comments": "off",
+    "no-unused-vars": "off"
   }
 };

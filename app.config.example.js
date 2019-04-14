@@ -22,9 +22,7 @@ const config = {
     enabled: true,
     directory: {
       search: "/var/log/via/search",
-      wssRouter: "/var/log/via/wss-router",
-      wssInitializer: "/var/log/via/wss-initializer",
-      wssSearchController: "/var/log/via/wss-search"
+      wss: "/var/log/via/wss"
     }
   },
   temporaryDirectory: "/tmp"

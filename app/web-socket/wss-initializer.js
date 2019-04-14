@@ -13,8 +13,8 @@ class WSSInitializer {
   constructor(server) {
     this._service = new SearchService({ api: true })
     this._wss = new WebSocket.Server({ server })
-    this._logger = new Logger(config.log.directory.wssInitializer, !config.log.enabled)
-    const routerLogger = new Logger(config.log.directory.wssRouter, !config.log.enabled)
+    this._logger = new Logger(config.log.directory.wss, !config.log.enabled)
+    const routerLogger = new Logger(config.log.directory.wss, !config.log.enabled)
     this._router = new WSSRouter(routerLogger)
   }
 
