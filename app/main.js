@@ -10,17 +10,6 @@ import config from "../app.config"
 import http from "http"
 import videoRoutes from "./routes/video"
 
-// **TEST
-// import db from "./util/database"
-// db.execute("SELECT * FROM Videos")
-//   .then(data => {
-//     console.log(data)
-//   })
-//   .catch(err => {
-//     console.log(err)
-//   })
-// TEST**
-
 const app = express()
 const server = http.createServer(app)
 const port = config.server.port
