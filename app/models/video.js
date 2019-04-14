@@ -58,12 +58,10 @@ export default class Video {
   }
 
   static fetchById(videoId) {
-    return db.execute(`SELECT * FROM \`Videos\` WHERE VideoId=${videoId}`)
+    return db.execute("SELECT * FROM `Videos` WHERE VideoId = ?", [videoId])
   }
 
   static deleteById(videoId) {
-    return db.execute(`DELETE FROM \`Videos\` WHERE VideoId=${videoId}`)
+    return db.execute("DELETE FROM `Videos` WHERE VideoId = ?", [videoId])
   }
-
-  static updateById() {}
 }
