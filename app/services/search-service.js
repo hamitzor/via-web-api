@@ -9,6 +9,10 @@ import config from "../../app.config"
 class SearchService {
   constructor(commonOptions) {
     this._commonOptions = commonOptions ? commonOptions : {}
+    this._commonOptions["db-host"] = config.database.host
+    this._commonOptions["db-username"] = config.database.username
+    this._commonOptions["db-password"] = config.database.password
+    this._commonOptions["db-name"] = config.database.name
   }
 
   _stringifyOptions = (options) => Object.keys(options).reduce((acc, optionName) => {
@@ -40,16 +44,16 @@ class SearchService {
     })
   }
 
-  extractFeatures = (videoId, options) => {
+  esf = (videoId, options) => {
     return new Promise((resolve, reject) => {
       const stringifiedOptions = this._stringifyOptions({ ...options, ...this._commonOptions })
       const command = `${config.commandPath.extractFeature} ${videoId} ${stringifiedOptions}`
-      exec(command, (err, stdout) => {
+      exec(command, (err) => {
         if (err) {
           reject(err)
         }
         else {
-          resolve(JSON.parse(stdout))
+          resolve()
         }
       })
     })

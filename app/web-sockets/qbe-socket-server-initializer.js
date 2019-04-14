@@ -10,10 +10,10 @@ import config from "../../app.config"
 import WebSocket from "ws"
 
 class QBESocketServerInitializer {
-  constructor(server) {
+  constructor(port) {
     this._service = new SearchService({ api: true })
     this._logger = new Logger(config.log.directory.search, !config.log.enabled)
-    this._wss = new WebSocket.Server({ server, path: "/search/qbe" })
+    this._wss = new WebSocket.Server({ port })
   }
 
   _onMessageHandler = async (webSocket, message) => {
@@ -35,6 +35,7 @@ class QBESocketServerInitializer {
         }
       })
     } catch (err) {
+      this._logger.error(err)
       webSocket.send(JSON.stringify({
         status: false,
         message: "Internal Server Error"

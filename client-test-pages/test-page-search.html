@@ -7,7 +7,7 @@
   <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/default.min.css">
   <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
   <style>
-    *:not(h2) {
+    *:not(h1):not(h2) {
       font-size: 16px;
     }
 
@@ -23,12 +23,18 @@
     #qbe-result * {
       font-family: monospace
     }
+
+    #efs-result,
+    #efs-result * {
+      font-family: monospace
+    }
   </style>
 </head>
 
 <body>
-  <h2>VIA API - Search - Test</h2>
+  <h1>VIA API - Search - Test</h1>
   <div id="qbe-root">
+    <h2>Query by Example - Test</h2>
     <label for="qbe-end-point">Endpoint url:</label><br />
     <input id="qbe-end-point"><br /><br />
 
@@ -51,6 +57,26 @@
 
     <h4 id="qbe-message"></h4>
     <pre><code id="qbe-result"></code></pre>
+  </div>
+
+  <div id="esf-root">
+    <h2>Test Extract Search - Test</h2>
+    <label for="esf-end-point">Endpoint url:</label><br />
+    <input id="esf-end-point"><br /><br />
+
+    <label for="esf-video-id">Video ID:</label><br />
+    <input id="esf-video-id" type="number" value="1"><br /><br />
+
+    <label>Search between seconds</label><br /><br />
+    <label for="esf-begin">From:</label><br />
+    <input id="esf-begin" type="number" value="0"><br /><br />
+    <label for="esf-end">To:</label><br />
+    <input id="esf-end" type="number" value="60"><br /><br />
+
+    <button id="esf-submit">Test Extract Search Features</button>
+
+    <h4 id="esf-message"></h4>
+    <pre><code id="esf-result"></code></pre>
   </div>
   <script src="/search-test-script-bundle.js"></script>
 </body>

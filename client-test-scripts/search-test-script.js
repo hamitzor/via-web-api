@@ -18,10 +18,10 @@ const qbeTest = () => {
     begin: document.getElementById("qbe-begin"),
     end: document.getElementById("qbe-end"),
   }
-
+  
   let ws = undefined
 
-  qbe.endPoint.value = `${config.server.domain.replace("http://", "")}:${config.server.port}`
+  qbe.endPoint.value = `${config.server.domain.replace("http://", "")}:${config.socketPorts.qbe}`
 
   qbe.submit.onclick = () => {
 
@@ -70,6 +70,56 @@ const qbeTest = () => {
   }
 }
 
+
+const esfTest = () => {
+  const esf = {
+    endPoint: document.getElementById("esf-end-point"),
+    videoId: document.getElementById("esf-video-id"),
+    submit: document.getElementById("esf-submit"),
+    message: document.getElementById("esf-message"),
+    result: document.getElementById("esf-result"),
+    begin: document.getElementById("esf-begin"),
+    end: document.getElementById("esf-end"),
+  }
+
+  let ws = undefined
+
+  esf.endPoint.value = `${config.server.domain.replace("http://", "")}:${config.socketPorts.esf}`
+
+  esf.submit.onclick = () => {
+
+    ws && ws.close()
+
+    const endPoint = esf.endPoint.value
+    const videoId = parseInt(esf.videoId.value)
+
+    const data = {
+      videoId,
+      begin: parseInt(esf.begin.value),
+      end: parseInt(esf.end.value)
+    }
+
+    ws = new WebSocket(`ws:${endPoint}`)
+
+    ws.onopen = function () {
+      ws.send(JSON.stringify(data))
+      esf.message.innerHTML = `Extract Search Features request sent with parameters videoId = ${videoId} waiting for response...`
+      esf.result.innerHTML = ""
+    }
+
+    ws.onmessage = function (evt) {
+      esf.message.innerHTML = "Extract Search Features respond is received:"
+      esf.result.innerHTML = JSON.stringify(JSON.parse(evt.data), null, "   ")
+      hljs.highlightBlock(esf.result)
+    }
+
+    ws.onclose = function () {
+      esf.message.innerHTML = "Connection is closed"
+    }
+  }
+}
+
 document.addEventListener("DOMContentLoaded", () => {
   qbeTest()
+  esfTest()
 })

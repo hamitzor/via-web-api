@@ -9,10 +9,10 @@ import config from "../../app.config"
 import WebSocket from "ws"
 
 class ESFSocketServerInitializer {
-  constructor(server) {
+  constructor(port) {
     this._service = new SearchService({ api: true })
     this._logger = new Logger(config.log.directory.search, !config.log.enabled)
-    this._wss = new WebSocket.Server({ server, path: "/search/esf" })
+    this._wss = new WebSocket.Server({ port })
   }
 
   _onMessageHandler = async (webSocket, message) => {
@@ -21,18 +21,29 @@ class ESFSocketServerInitializer {
     try {
       const videoId = data.videoId
       const options = { begin: data.begin, end: data.end }
-      const result = await this._service.extractFeatures(videoId, options)
+      this._service.esf(videoId, options)
 
-      webSocket.send(JSON.stringify({
-        status: true,
-        result
-      }), err => {
-        if (err) {
-          this._logger.error(err)
-          webSocket.close()
+      //@TODO: implement real logic. get process percentage and inform client.
+      let process = 0
+
+      const interval = setInterval(() => {
+        if (process > 100) {
+          clearInterval(interval)
         }
-      })
+        webSocket.send(JSON.stringify({
+          status: true,
+          process: process
+        }), err => {
+          process = process + 10
+          if (err) {
+            this._logger.error(err)
+            webSocket.close()
+          }
+        })
+      }, 1000)
+
     } catch (err) {
+      this._logger.error(err)
       webSocket.send(JSON.stringify({
         status: false,
         message: "Internal Server Error"
