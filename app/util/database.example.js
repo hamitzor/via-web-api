@@ -1,3 +1,7 @@
+/**
+ * @author kgnugur@gmail.com (Kagan Ugur)
+ */
+
 import mysql from "mysql2"
 
 // Create the connection pool. The pool-specific settings are the defaults
