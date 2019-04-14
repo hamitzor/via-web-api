@@ -1,5 +1,5 @@
 /**
- * @fileoverview Search WebSocket initializer class for initializing Search WebSocket instances
+ * @fileoverview Socket server initializater for query by example service.
  * @author thenrerise@gmail.com (Hamit Zor)
  */
 
@@ -8,13 +8,12 @@ import SearchService from "../services/search-service"
 import Logger from "../util/logger"
 import config from "../../app.config"
 import WebSocket from "ws"
-import WebSocketCannotSendMessageError from "../errors/web-socket-cannot-send-message-error"
 
-class SearchWebSocketServerInitializer {
+class QBESocketServerInitializer {
   constructor(server) {
     this._service = new SearchService({ api: true })
     this._logger = new Logger(config.log.directory.search, !config.log.enabled)
-    this._wss = new WebSocket.Server({ server })
+    this._wss = new WebSocket.Server({ server, path: "/search/qbe" })
   }
 
   _onMessageHandler = async (webSocket, message) => {
@@ -24,32 +23,27 @@ class SearchWebSocketServerInitializer {
       const videoId = data.videoId
       const exampleImageFilepath = await saveBase64Image(data.base64Image)
       const options = { min: data.min, begin: data.begin, end: data.end }
-      const result = await this._service.QBE(videoId, exampleImageFilepath, options)
+      const result = await this._service.qbe(videoId, exampleImageFilepath, options)
 
       webSocket.send(JSON.stringify({
         status: true,
         result
       }), err => {
         if (err) {
-          throw new WebSocketCannotSendMessageError(err.message)
+          this._logger.error(err)
+          webSocket.close()
         }
       })
     } catch (err) {
-      if (err instanceof WebSocketCannotSendMessageError) {
-        this._logger.error(err)
-        webSocket.close()
-      }
-      else {
-        webSocket.send(JSON.stringify({
-          status: false,
-          message: "Internal Server Error"
-        }), err => {
-          if (err) {
-            this._logger.error(err)
-            webSocket.close()
-          }
-        })
-      }
+      webSocket.send(JSON.stringify({
+        status: false,
+        message: "Internal Server Error"
+      }), err => {
+        if (err) {
+          this._logger.error(err)
+          webSocket.close()
+        }
+      })
     }
   }
 
@@ -66,4 +60,4 @@ class SearchWebSocketServerInitializer {
   }
 }
 
-export default SearchWebSocketServerInitializer
+export default QBESocketServerInitializer

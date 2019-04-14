@@ -5,7 +5,7 @@ import cookieParser from "cookie-parser"
 import bodyParser from "body-parser"
 import compression from "compression"
 import path from "path"
-import SearchWebSocketServerInitializer from "./web-sockets/search-web-socket-server-initializer"
+import QBESocketServerInitializer from "./web-sockets/qbe-socket-server-initializer"
 import config from "../app.config"
 import http from "http"
 import videoRoutes from "./routes/video"
@@ -21,19 +21,19 @@ app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(express.static(path.resolve(__dirname)))
 
-new SearchWebSocketServerInitializer(server).attachHandlers()
+new QBESocketServerInitializer(server).attachHandlers()
 
-app.get("/", function(req, res) {
+app.get("/", function (req, res) {
   res.sendFile(path.resolve(__dirname, "../client-test-pages/home.html"))
 })
 
-app.get("/test", function(req, res) {
+app.get("/test", function (req, res) {
   res.sendFile(
     path.resolve(__dirname, "../client-test-pages/test-page-home.html")
   )
 })
 
-app.get("/test/search-test", function(req, res) {
+app.get("/test/search-test", function (req, res) {
   res.sendFile(
     path.resolve(__dirname, "../client-test-pages/test-page-search.html")
   )

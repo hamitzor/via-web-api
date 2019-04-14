@@ -3,8 +3,8 @@
  * @author thenrerise@gmail.com (Hamit Zor)
  */
 
-import config from '../app.config'
-import hljs from 'highlightjs'
+import config from "../app.config"
+import hljs from "highlightjs"
 
 const qbeTest = () => {
   const qbe = {

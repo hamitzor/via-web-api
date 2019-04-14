@@ -24,13 +24,26 @@ class SearchService {
     return acc
   }, "")
 
-  QBE = (videoId, exampleFile, options) => {
+
+  qbe = (videoId, exampleFile, options) => {
     return new Promise((resolve, reject) => {
-      if (typeof videoId !== "number") {
-        reject("videoId is not valid")
-      }
       const stringifiedOptions = this._stringifyOptions({ ...options, ...this._commonOptions })
       const command = `${config.commandPath.queryByExample} ${videoId} ${exampleFile} ${stringifiedOptions}`
+      exec(command, (err, stdout) => {
+        if (err) {
+          reject(err)
+        }
+        else {
+          resolve(JSON.parse(stdout))
+        }
+      })
+    })
+  }
+
+  extractFeatures = (videoId, options) => {
+    return new Promise((resolve, reject) => {
+      const stringifiedOptions = this._stringifyOptions({ ...options, ...this._commonOptions })
+      const command = `${config.commandPath.extractFeature} ${videoId} ${stringifiedOptions}`
       exec(command, (err, stdout) => {
         if (err) {
           reject(err)

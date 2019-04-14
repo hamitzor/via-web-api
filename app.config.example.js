@@ -18,7 +18,7 @@ const config = {
       search: "/var/log/via/search"
     }
   },
-  temporaryDirectory: '/tmp'
+  temporaryDirectory: "/tmp"
 }
 
 export default config
