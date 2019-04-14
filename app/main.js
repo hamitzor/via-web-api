@@ -24,19 +24,25 @@ app.use(express.static(path.resolve(__dirname)))
 
 new WSSInitializer(server).attachHandlers()
 
-app.get("/", function (req, res) {
+app.get("/", function(req, res) {
   res.sendFile(path.resolve(__dirname, "../client-test-pages/home.html"))
 })
 
-app.get("/test", function (req, res) {
+app.get("/test", function(req, res) {
   res.sendFile(
     path.resolve(__dirname, "../client-test-pages/test-page-home.html")
   )
 })
 
-app.get("/test/search-test", function (req, res) {
+app.get("/test/search-test", function(req, res) {
   res.sendFile(
     path.resolve(__dirname, "../client-test-pages/test-page-search.html")
+  )
+})
+
+app.get("/test/file-upload", function(req, res) {
+  res.sendFile(
+    path.resolve(__dirname, "../client-test-pages/test-page-upload-file.html")
   )
 })
 

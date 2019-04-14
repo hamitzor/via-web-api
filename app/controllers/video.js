@@ -3,6 +3,8 @@
  */
 
 import Video from "../models/video"
+import formidable from "formidable"
+import util from "util"
 
 export const getVideos = (req, res) => {
   Video.fetchAll()
@@ -28,41 +30,13 @@ export const getVideo = (req, res) => {
 }
 
 export const postVideo = (req, res) => {
-  const VideoId = req.params.VideoId
-  const CreationDate = req.params.CreationDate
-  const Title = req.params.Title
-  const Length = req.params.Length
-  const Format = req.params.Format
-  const Name = req.params.Name
-  const Size = req.params.Size
-  const Path = req.params.Path
-  const FPS = req.params.FPS
-  const TotalFrame = req.params.TotalFrame
-  const Width = req.params.Width
-  const Height = req.params.Height
-  const video = new Video(
-    VideoId,
-    CreationDate,
-    Title,
-    Length,
-    Format,
-    Name,
-    Size,
-    Path,
-    FPS,
-    TotalFrame,
-    Width,
-    Height
-  )
+  const form = new formidable.IncomingForm()
 
-  video
-    .save()
-    .then(() => {
-      console.log("New video saved")
-    })
-    .catch(err => {
-      console.log("Error:",err)
-    })
+  form.parse(req, (err, fields, files) => {
+    res.writeHead(200, { "content-type": "text/plain" })
+    res.write("received upload:\n\n")
+    res.end(util.inspect({ fields: fields, files: files }))
+  })
 }
 
 export const deleteVideo = (req, res) => {
@@ -75,5 +49,3 @@ export const deleteVideo = (req, res) => {
       console.log(err)
     })
 }
-
-export const updateVideo = (req, res) => {}
