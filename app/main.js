@@ -5,9 +5,10 @@ import cookieParser from "cookie-parser"
 import bodyParser from "body-parser"
 import compression from "compression"
 import path from "path"
+import http from "http"
+import cors from "cors"
 import WSSInitializer from "./web-socket/wss-initializer"
 import config from "../app.config"
-import http from "http"
 import videoRoutes from "./routes/video"
 import searchRoutes from "./routes/search-router"
 
@@ -46,7 +47,7 @@ app.get("/test/file-upload", function(req, res) {
   )
 })
 
-app.use("/video", videoRoutes)
+app.use("/video", cors(), videoRoutes)
 
 app.use("/search", searchRoutes)
 
