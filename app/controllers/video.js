@@ -8,7 +8,7 @@ import formidable from "formidable"
 export const getVideos = (req, res) => {
   Video.fetchAll()
     .then(([queryRows, queryFields]) => {
-      console.log(queryRows)
+      res.status(200).json({ ...queryRows })
     })
     .catch(err => {
       console.log(err)
@@ -19,7 +19,7 @@ export const getVideo = (req, res) => {
   const videoId = req.params.videoId
   Video.fetchById(videoId)
     .then(([queryRows, queryFields]) => {
-      console.log(queryRows)
+      res.status(200).json({ ...queryRows })
     })
     .catch(err => {
       console.log(err)
@@ -43,7 +43,9 @@ export const postVideo = (req, res) => {
       throw err
     })
     .on("end", () => {
-      res.end()
+      res.status(201).json({
+        message: "Post created succesfully"
+      })
     })
 }
 
@@ -51,7 +53,9 @@ export const deleteVideo = (req, res) => {
   const videoId = req.params.videoId
   Video.deleteById(videoId)
     .then(([queryRows, queryFields]) => {
-      console.log("Deleted")
+      res.status(200).json({
+        message: `Post with id:${videoId} is deleted`
+      })
     })
     .catch(err => {
       console.log(err)
