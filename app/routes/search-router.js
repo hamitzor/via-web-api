@@ -9,7 +9,10 @@ const router = express.Router()
 
 const searchController = new SearchController()
 
-router.post("/query-by-example", searchController.queryByExample)
-router.get("/extract-search-features", searchController.extractSearchFeatures)
+router.post("/qbe-operation", searchController.createQBEOperation)
+
+router.get("/qbe-operation", searchController.getQBEOperation)
+
+router.get("/esf", searchController.ESF)
 
 export default router

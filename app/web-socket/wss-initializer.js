@@ -3,19 +3,18 @@
  * @author thenrerise@gmail.com (Hamit Zor)
  */
 
-import SearchService from "../services/search-service"
 import Logger from "../util/logger"
-import config from "../../app.config"
+import getConfig from "../util/config-fetcher"
 import WebSocket from "ws"
 import WSSRouter from "./wss-router"
+import SharedData from "./wss-shared-data"
 
 class WSSInitializer {
   constructor(server) {
-    this._service = new SearchService({ api: true })
     this._wss = new WebSocket.Server({ server })
-    this._logger = new Logger(config.log.directory.wss, !config.log.enabled)
-    const routerLogger = new Logger(config.log.directory.wss, !config.log.enabled)
-    this._router = new WSSRouter(routerLogger)
+    this._logger = new Logger(getConfig("logging:directory:wss"), !getConfig("logging:enabled"))
+    this._router = new WSSRouter(this._logger)
+    this._sharedData = new SharedData()
   }
 
   _sendError = (webSocket, errorMessage) => {
@@ -31,8 +30,8 @@ class WSSInitializer {
   }
 
   attachHandlers = () => {
-    this._wss.on("connection", (webSocket) => {
-      webSocket.on("message", message => {
+    this._wss.on("connection", (ws) => {
+      ws.on("message", message => {
 
         let messageObject = {}
 
@@ -40,12 +39,12 @@ class WSSInitializer {
           messageObject = JSON.parse(message)
         }
         catch (err) {
-          this._sendError(webSocket, "Message should in JSON literal format")
+          this._sendError(ws, "Message should in JSON literal format")
         }
 
         const { route, data } = messageObject
 
-        this._router.use(webSocket, route, data)
+        this._router.use(route, data, ws, this._sharedData)
       })
     })
   }

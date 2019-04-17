@@ -6,37 +6,41 @@ class WSSRouter {
     this._logger = logger
     this._searchController = new WSSSearchController()
     this._routes = {
-      ["watch-query-by-example"]: this._searchController.watchQueryByExample,
-      ["watch-extract-search-features"]: this._searchController.watchExtractSearchFeatures
+      ["start-qbe"]: this._searchController.startQBE,
+      ["start-esf"]: this._searchController.startESF,
+      ["watch-qbe"]: this._searchController.watchQBE,
+      ["watch-esf"]: this._searchController.watchESF,
+      ["update-esf-progress"]: this._searchController.updateESFProgress,
+      ["update-qbe-progress"]: this._searchController.updateQBEProgress
     }
   }
 
-  use = (webSocket, route, data) => {
+  use = (route, data, ws, sharedData) => {
     if (route !== "use") {
       const requestedController = this._routes[route]
       if (typeof requestedController !== "function") {
-        webSocket.send(JSON.stringify({
+        ws.send(JSON.stringify({
           status: false,
           message: "route not found"
         }), err => {
           if (err) {
             this._logger.error(err)
-            webSocket.close()
+            ws.close()
           }
         })
       }
       else {
-        requestedController(webSocket, data)
+        requestedController(data, ws, sharedData)
       }
     }
     else {
-      webSocket.send(JSON.stringify({
+      ws.send(JSON.stringify({
         status: false,
         message: "use route is restricted"
       }), err => {
         if (err) {
           this._logger.error(err)
-          webSocket.close()
+          ws.close()
         }
       })
     }

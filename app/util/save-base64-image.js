@@ -5,7 +5,7 @@
 
 import crypto from "crypto"
 import fs from "fs"
-import config from "../../app.config"
+import getConfig from "../util/config-fetcher"
 import path from "path"
 
 const saveBase64Image = (image) => {
@@ -23,7 +23,7 @@ const saveBase64Image = (image) => {
     const type = (matches[1].match(/\/(.*?)$/))[1]
 
     const name = crypto.randomBytes(64).toString("hex")
-    const directory = config.temporaryDirectory
+    const directory = getConfig("temporary-directory")
 
     const savePath = path.resolve(directory, `${name}.${type}`)
 
