@@ -3,40 +3,16 @@
  * @author thenrerise@gmail.com (Hamit Zor)
  */
 
-import Logger from "../../util/logger"
 import getConfig from "../../util/config-fetcher"
 import OperationModel from "../../models/operation-model"
 import validator from "validator"
 import { spawn } from "child_process"
+import WSSController from "./wss-controller"
 
-class WSSSearchController {
+class WSSSearchController extends WSSController {
   constructor() {
-    this._logger = new Logger(getConfig("logging:directory:wss"), !getConfig("logging:enabled"))
+    super()
     this._operationModel = new OperationModel()
-  }
-
-  _sendError = (ws, errorMessage) => {
-    ws.send(JSON.stringify({
-      status: false,
-      message: errorMessage
-    }), err => {
-      if (err) {
-        this._logger.error(err)
-        ws.close()
-      }
-    })
-  }
-
-  _sendData = (ws, data) => {
-    ws.send(JSON.stringify({
-      status: true,
-      data
-    }), err => {
-      if (err) {
-        this._logger.error(err)
-        ws.close()
-      }
-    })
   }
 
   startQBE = async ({ operationId }, ws) => {
@@ -45,7 +21,7 @@ class WSSSearchController {
         throw new Error("Invalid operationId")
       }
 
-      const operation = await this._operationModel.get(operationId)
+      const operation = await this._operationModel.select(operationId)
 
       if (!operation) {
         throw new Error("Wrong operationId")
@@ -53,23 +29,20 @@ class WSSSearchController {
 
       const { argv } = operation
 
-      const process = spawn("python", JSON.parse(argv))
+      const env = {
+        PYTHONPATH: getConfig("module-path:search")
+      }
+      const process = spawn("python", JSON.parse(argv), { env })
 
       process.on("error", (err) => {
         this._sendError(ws, "Internal Server Error")
+        ws.close()
         this._logger.error(err)
       })
 
       ws.on("close", async () => {
-        try {
-          this._logger.info(`Terminated QBE operation with operationId "${operationId}" , for WebSocket connection is lost`)
-          await this._operationModel.delete(operationId)
-        } catch (err) {
-          this._logger.error(err)
-        }
-        finally {
-          process.kill()
-        }
+        this._logger.info(`Terminated QBE operation with operationId "${operationId}" , for WebSocket connection is lost`)
+        process.kill()
       })
 
       this._sendData(ws, { operationId })
@@ -87,7 +60,7 @@ class WSSSearchController {
         throw new Error("Invalid operationId")
       }
 
-      const operation = await this._operationModel.get(operationId)
+      const operation = await this._operationModel.select(operationId)
 
       if (!operation) {
         throw new Error("Wrong operationId")
@@ -100,7 +73,6 @@ class WSSSearchController {
           this._sendData(ws, { progress: value })
         }
       })
-
 
     } catch (err) {
       this._logger.error(err)

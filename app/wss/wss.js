@@ -1,22 +1,16 @@
-/**
- * @fileoverview Socket server initializater for query by example service.
- * @author thenrerise@gmail.com (Hamit Zor)
- */
-
 import Logger from "../util/logger"
 import getConfig from "../util/config-fetcher"
 import WebSocket from "ws"
 import WSSRouter from "./wss-router"
 import SharedData from "./wss-shared-data"
 
-class WSSInitializer {
+class WSS {
   constructor(server) {
     this._wss = new WebSocket.Server({ server })
     this._logger = new Logger(getConfig("logging:directory:wss"), !getConfig("logging:enabled"))
     this._router = new WSSRouter(this._logger)
     this._sharedData = new SharedData()
   }
-
   _sendError = (webSocket, errorMessage) => {
     webSocket.send(JSON.stringify({
       status: false,
@@ -28,7 +22,6 @@ class WSSInitializer {
       }
     })
   }
-
   attachHandlers = () => {
     this._wss.on("connection", (ws) => {
       ws.on("message", message => {
@@ -50,4 +43,4 @@ class WSSInitializer {
   }
 }
 
-export default WSSInitializer
+export default WSS

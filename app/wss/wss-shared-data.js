@@ -19,7 +19,6 @@ class SharedData extends EventEmitter {
     this.emit("reduce", name, this._data[name])
     this.emit("update", name, this._data[name])
   }
-
 }
 
 export default SharedData

@@ -10,27 +10,21 @@ import OptionToStringConverter from "../util/option-to-string-converter"
 import OperationModel from "../models/operation-model"
 import validator from "validator"
 import getConfig from "../util/config-fetcher"
+import Controller from "./controller"
 
-export default class SearchController {
+export default class SearchController extends Controller {
 
   constructor() {
+    super()
     this._logger = new Logger(getConfig("logging:directory:search"), !getConfig("logging:enabled"))
     this._optionConverter = new OptionToStringConverter({
-      "api": true,
+      api: true,
       "db-host": getConfig("database:host"),
       "db-username": getConfig("database:username"),
       "db-password": getConfig("database:password"),
       "db-name": getConfig("database:name"),
     })
     this._operationModel = new OperationModel()
-  }
-
-  _sendError = (res, message) => {
-    res.send(JSON.stringify({ status: false, message })).end()
-  }
-
-  _sendData = (res, data) => {
-    res.send(JSON.stringify({ status: true, data })).end()
   }
 
   createQBEOperation = async (req, res) => {
@@ -69,22 +63,22 @@ export default class SearchController {
 
         const watchId = crypto.randomBytes(8).toString("hex")
 
-        const { insertId } = await this._operationModel.add({ userId, videoId, watchId })
+        const { insertId } = await this._operationModel.insert({ userId, videoId, watchId })
 
         const options = {
           min,
           begin,
           end,
-          "ws-host": getConfig("server:domain").replace("http://", "").replace("https://", ""),
+          websocket: true,
+          "ws-host": getConfig("server:host").replace("http://", "").replace("https://", ""),
           "ws-port": getConfig("server:port"),
           "ws-route": "update-qbe-progress",
-          "watch-id": watchId,
           "operation-id": insertId
         }
 
         const optionVector = this._optionConverter.convert(options)
 
-        const argv = [getConfig("command-path:qbe"), videoId, exampleFile.path, ...optionVector]
+        const argv = ["-m", "src.main_scripts.qbe", videoId, exampleFile.path, ...optionVector]
 
         await this._operationModel.update(insertId, { argv })
 
@@ -108,7 +102,7 @@ export default class SearchController {
     }
 
     try {
-      const operation = await this._operationModel.get(id)
+      const operation = await this._operationModel.select(id)
       this._sendData(res, {
         operation: {
           operationId: operation.operation_id,

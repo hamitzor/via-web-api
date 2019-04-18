@@ -8,7 +8,7 @@ import hljs from "highlightjs"
 
 
 
-const WSURL = `ws:${getConfig("server:domain").replace("http://", "")}:${getConfig("server:port")}`
+const WSURL = `ws:${getConfig("server:host").replace("http://", "")}:${getConfig("server:port")}`
 
 
 
@@ -38,7 +38,7 @@ const QBETest = () => {
   let startWS = undefined
   let watchWS = undefined
 
-  QBE.endPoint.value = `${getConfig("server:domain")}:${getConfig("server:port")}/search/qbe-operation`
+  QBE.endPoint.value = `${getConfig("server:host")}:${getConfig("server:port")}/search/qbe-operation`
 
   QBE.submit.onclick = async () => {
 
@@ -148,7 +148,7 @@ const esfTest = () => {
 
   let ws = undefined
 
-  esf.endPoint.value = `${getConfig("server:domain")}:${getConfig("server:port")}/search/esf`
+  esf.endPoint.value = `${getConfig("server:host")}:${getConfig("server:port")}/search/esf`
 
   esf.submit.onclick = async () => {
     const endPoint = esf.endPoint.value
@@ -167,7 +167,7 @@ const esfTest = () => {
 
       ws && ws.close()
 
-      ws = new WebSocket(`ws:${getConfig("server:domain").replace("http://", "")}:${getConfig("server:port")}`)
+      ws = new WebSocket(`ws:${getConfig("server:host").replace("http://", "")}:${getConfig("server:port")}`)
 
       ws.onopen = function () {
         ws.send(JSON.stringify({ route: "watch-esf", data }))
