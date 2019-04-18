@@ -8,7 +8,7 @@ import formidable from "formidable"
 export const getVideos = (req, res) => {
   Video.fetchAll()
     .then(([queryRows, queryFields]) => {
-      res.status(200).json({ ...queryRows })
+      res.status(200).json(queryRows)
     })
     .catch(err => {
       console.log(err)
@@ -19,7 +19,7 @@ export const getVideo = (req, res) => {
   const videoId = req.params.videoId
   Video.fetchById(videoId)
     .then(([queryRows, queryFields]) => {
-      res.status(200).json({ ...queryRows })
+      res.status(200).json(...queryRows)
     })
     .catch(err => {
       console.log(err)
