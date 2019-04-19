@@ -9,9 +9,7 @@ const router = express.Router()
 
 const searchController = new SearchController()
 
-router.post("/qbe-operation", searchController.createQBEOperation)
-
-router.get("/qbe-operation", searchController.getQBEOperation)
+router.get("/terminate-qbe", searchController.terminateQBE)
 
 router.get("/esf", searchController.ESF)
 

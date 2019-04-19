@@ -4,94 +4,126 @@
  */
 
 import getConfig from "../../util/config-fetcher"
-import OperationModel from "../../models/operation-model"
+import ArgumentListModel from "../../models/argument-list-model"
 import validator from "validator"
 import { spawn } from "child_process"
 import WSSController from "./wss-controller"
+import codes from "../../util/status-codes"
+import saveBase64Image from "../../util/save-base64-image"
+import crypto from "crypto"
+import OptionToStringConverter from "../../util/option-to-string-converter"
 
 class WSSSearchController extends WSSController {
   constructor() {
     super()
-    this._operationModel = new OperationModel()
+    this._operationModel = new ArgumentListModel()
+    this._optionConverter = new OptionToStringConverter({
+      "api": true,
+      "websocket": true,
+      "db-host": getConfig("database:host"),
+      "db-username": getConfig("database:username"),
+      "db-password": getConfig("database:password"),
+      "db-name": getConfig("database:name"),
+      "ws-host": getConfig("server:host").replace("http://", "").replace("https://", ""),
+      "ws-port": getConfig("server:port"),
+    })
   }
 
-  startQBE = async ({ operationId }, ws) => {
+  startQBE = async ({ userId, videoId, encodedImage, min, begin, end }, ws, operationEE) => {
     try {
-      if (!validator.isInt(operationId + "")) {
-        throw new Error("Invalid operationId")
+      if (!encodedImage) { throw new Error("Example file is missing") }
+      if (!validator.isInt(videoId + "")) { throw new Error("Invalid videoId") }
+      if (!validator.isInt(userId + "")) { throw new Error("Invalid userId") }
+      if (min && !validator.isFloat(min + "", { min: 0.0, max: 1.0 })) { throw new Error("Invalid min") }
+      if (begin && !validator.isInt(begin + "", { min: 0.0 })) { throw new Error("Invalid begin") }
+      if (end && !validator.isInt(end + "", { min: 0.0 })) { throw new Error("Invalid end") }
+
+      const operationId = crypto.randomBytes(8).toString("hex")
+
+      const options = {
+        min,
+        begin,
+        end,
+        "ws-route": "progress-qbe",
+        "operation-id": operationId
       }
 
-      const operation = await this._operationModel.select(operationId)
+      const optionVector = this._optionConverter.convert(options)
 
-      if (!operation) {
-        throw new Error("Wrong operationId")
-      }
+      const imagePath = await saveBase64Image(encodedImage)
 
-      const { argv } = operation
+      const argv = ["-m", "src.main_scripts.qbe", videoId, imagePath, ...optionVector]
 
-      const env = {
-        PYTHONPATH: getConfig("module-path:search")
-      }
-      const process = spawn("python", JSON.parse(argv), { env })
+      const env = { PYTHONPATH: getConfig("module-path:search") }
 
-      process.on("error", (err) => {
-        this._sendError(ws, "Internal Server Error")
-        ws.close()
-        this._logger.error(err)
+      const process = spawn("python", argv, { env })
+
+      process.on("exit", async (code) => {
+        try {
+          /* eslint-disable */
+          switch (code) {
+            case codes.INTERNAL_SERVER_ERROR:
+              this._sendAndClose(ws, codes.INTERNAL_SERVER_ERROR)
+              break
+            case codes.TERMINATED_BY_USER:
+              this._sendAndClose(ws, codes.TERMINATED_BY_USER)
+              break
+            case codes.COMPLETED_SUCCESSFULLY:
+              this._sendAndClose(ws, codes.COMPLETED_SUCCESSFULLY)
+              break
+            default:
+              this._sendAndClose(ws, codes.INTERNAL_SERVER_ERROR)
+          }
+          /* eslint-enable */
+        }
+        catch (err) {
+          this._sendAndClose(ws, codes.INTERNAL_SERVER_ERROR)
+          this._logger.error(err)
+        }
       })
 
-      ws.on("close", async () => {
-        this._logger.info(`Terminated QBE operation with operationId "${operationId}" , for WebSocket connection is lost`)
-        process.kill()
+      operationEE.onTerminate(operationId, () => {
+        process.kill("SIGUSR1")
+        operationEE.didTerminate(operationId)
       })
 
-      this._sendData(ws, { operationId })
+      ws.on("close", () => {
+        setTimeout(() => {
+          process.kill("SIGUSR1")
+        }, 1000)
+      })
+
+      this._send(ws, codes.OK, { operationId })
     }
     catch (err) {
       this._logger.error(err)
-      this._sendError(ws, "Internal Server Error")
+      this._sendAndClose(ws, codes.INTERNAL_SERVER_ERROR)
     }
   }
 
-  watchQBE = async ({ operationId }, ws, sharedData) => {
+  watchQBE = async ({ operationId }, ws, operationEE) => {
     try {
 
-      if (!validator.isInt(operationId + "")) {
+      if (!operationId) {
         throw new Error("Invalid operationId")
       }
 
-      const operation = await this._operationModel.select(operationId)
-
-      if (!operation) {
-        throw new Error("Wrong operationId")
-      }
-
-      const { watch_id: watchId } = operation
-
-      sharedData.on("upgrade", (name, value) => {
-        if (name === watchId) {
-          this._sendData(ws, { progress: value })
-        }
+      operationEE.onProgress(operationId, (data) => {
+        this._send(ws, codes.PROGRESS, data)
       })
 
     } catch (err) {
       this._logger.error(err)
-      this._sendError(ws, "Internal Server Error")
+      this._sendAndClose(ws, codes.INTERNAL_SERVER_ERROR)
     }
   }
 
-  updateQBEProgress = ({ id: watchId, value: progress }, ws, sharedData) => {
+  progressQBE = ({ operationId, progress, results }, ws, operationEE) => {
     try {
-
-      if (!watchId) {
-        throw new Error("Invalid id")
+      if (!operationId) {
+        throw new Error("Invalid operationId")
       }
-
-      if (!validator.isNumeric(progress + "")) {
-        throw new Error("Invalid value")
-      }
-
-      sharedData.set(watchId, progress)
+      operationEE.progress(operationId, { progress, results })
 
     } catch (err) {
       this._logger.error(err)

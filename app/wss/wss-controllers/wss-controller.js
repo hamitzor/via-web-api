@@ -12,10 +12,10 @@ class WSSController {
     this._logger = new Logger(getConfig("logging:directory:wss"), !getConfig("logging:enabled"))
   }
 
-  _sendError = (ws, errorMessage) => {
+  _send = (ws, status, data = null) => {
     ws.send(JSON.stringify({
-      status: false,
-      message: errorMessage
+      status,
+      data
     }), err => {
       if (err) {
         this._logger.error(err)
@@ -24,14 +24,14 @@ class WSSController {
     })
   }
 
-  _sendData = (ws, data) => {
+  _sendAndClose = (ws, status, data = null) => {
     ws.send(JSON.stringify({
-      status: true,
+      status,
       data
     }), err => {
+      ws.close()
       if (err) {
         this._logger.error(err)
-        ws.close()
       }
     })
   }

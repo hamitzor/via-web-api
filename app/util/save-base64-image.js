@@ -22,7 +22,7 @@ const saveBase64Image = (image) => {
     // Extract "jpeg" from "image/jpeg"
     const type = (matches[1].match(/\/(.*?)$/))[1]
 
-    const name = crypto.randomBytes(64).toString("hex")
+    const name = crypto.randomBytes(8).toString("hex")
     const directory = getConfig("temporary-directory")
 
     const savePath = path.resolve(directory, `${name}.${type}`)

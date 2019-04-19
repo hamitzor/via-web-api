@@ -2,15 +2,15 @@ import Logger from "../util/logger"
 import getConfig from "../util/config-fetcher"
 import WebSocket from "ws"
 import WSSRouter from "./wss-router"
-import SharedData from "./wss-shared-data"
 
 class WSS {
-  constructor(server) {
+  constructor({ server, operationEE }) {
     this._wss = new WebSocket.Server({ server })
     this._logger = new Logger(getConfig("logging:directory:wss"), !getConfig("logging:enabled"))
     this._router = new WSSRouter(this._logger)
-    this._sharedData = new SharedData()
+    this._operationEE = operationEE
   }
+
   _sendError = (webSocket, errorMessage) => {
     webSocket.send(JSON.stringify({
       status: false,
@@ -22,6 +22,7 @@ class WSS {
       }
     })
   }
+
   attachHandlers = () => {
     this._wss.on("connection", (ws) => {
       ws.on("message", message => {
@@ -37,7 +38,7 @@ class WSS {
 
         const { route, data } = messageObject
 
-        this._router.use(route, data, ws, this._sharedData)
+        this._router.use(route, data, ws, this._operationEE)
       })
     })
   }

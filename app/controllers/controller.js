@@ -4,12 +4,7 @@
 
 
 export default class Controller {
-
-  _sendError = (res, message) => {
-    res.send(JSON.stringify({ status: false, message })).end()
-  }
-
-  _sendData = (res, data) => {
-    res.send(JSON.stringify({ status: true, data })).end()
+  _send = (res, status, data) => {
+    res.send(JSON.stringify({ status, data })).end()
   }
 }

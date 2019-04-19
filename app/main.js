@@ -6,13 +6,13 @@ import { urlencoded } from "body-parser"
 import compression from "compression"
 import path from "path"
 import cors from "cors"
-import WSSFactory from "./wss/wss-factory"
+import WSS from "./wss/wss"
 import getConfig from "./util/config-fetcher"
 import http from "http"
 import videoRoutes from "./routes/video"
 import searchRoutes from "./routes/search-router"
+import OperationEE from "./event-emmiters"
 
-process.env.TZ = "Europe/Istanbul"
 const app = express()
 const server = http.createServer(app)
 const port = getConfig("server:port")
@@ -22,7 +22,11 @@ app.use(compression())
 app.use(cookieParser())
 app.use(express.static(path.resolve(__dirname)))
 
-WSSFactory.getInstance(server).attachHandlers()
+const operationEE = new OperationEE()
+
+app.set("operationEE", operationEE)
+
+new WSS({ server, operationEE }).attachHandlers()
 
 app.get("/", function (req, res) {
   res.sendFile(path.resolve(__dirname, "../client-test-pages/home.html"))

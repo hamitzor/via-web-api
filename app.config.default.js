@@ -9,5 +9,5 @@ module.exports = {
   "logging:enabled": true,
   "logging:directory:search": "/var/log",
   "logging:directory:wss": "/var/log",
-  "temporary-directory": "/tmp"
+  "temporary-directory": "/tmp",
 }

@@ -5,6 +5,7 @@
 
 import getConfig from "../app/util/config-fetcher"
 import hljs from "highlightjs"
+import codes from "../app/util/status-codes"
 
 
 
@@ -19,6 +20,7 @@ const QBETest = () => {
     userId: document.getElementById("qbe-user-id"),
     example: document.getElementById("qbe-example"),
     submit: document.getElementById("qbe-submit"),
+    terminate: document.getElementById("qbe-terminate"),
     message: document.getElementById("qbe-message"),
     result: document.getElementById("qbe-result"),
     min: document.getElementById("qbe-min"),
@@ -36,102 +38,101 @@ const QBETest = () => {
   }
 
   let startWS = undefined
-  let watchWS = undefined
 
-  QBE.endPoint.value = `${getConfig("server:host")}:${getConfig("server:port")}/search/qbe-operation`
+  let results = []
+
+  QBE.endPoint.value = `${getConfig("server:host")}:${getConfig("server:port")}`
 
   QBE.submit.onclick = async () => {
 
+    results = []
+
     const endPoint = QBE.endPoint.value
-    const file = QBE.example.files[0]
-    const videoId = parseInt(QBE.videoId.value)
 
-    const postData = new FormData()
-    postData.append("exampleFile", file)
-    postData.append("videoId", videoId)
-    postData.append("min", QBE.min.value)
-    postData.append("begin", QBE.begin.value)
-    postData.append("end", QBE.end.value)
-    postData.append("userId", QBE.userId.value)
+    const reader = new FileReader()
 
+    reader.onloadend = function () {
 
-    const QBEPost = await fetch(endPoint, {
-      method: "POST",
-      body: postData
-    })
-
-    const QBEPostResult = await QBEPost.json()
-
-    console.log(QBEPostResult)
-
-    if (QBEPostResult.status) {
       startWS && startWS.close()
 
       startWS = new WebSocket(WSURL)
 
-      const operationId = QBEPostResult.data.operationId
-
       startWS.onopen = function () {
         startWS.send(JSON.stringify({
           route: "start-qbe",
-          data: { operationId }
+          data: {
+            userId: QBE.userId.value,
+            videoId: parseInt(QBE.videoId.value),
+            encodedImage: reader.result,
+            min: parseInt(QBE.min.value),
+            begin: parseInt(QBE.begin.value),
+            end: parseInt(QBE.end.value),
+          }
         }))
       }
 
       startWS.onmessage = function (evt) {
-        const startWSMessage = JSON.parse(evt.data)
-        console.log(startWSMessage)
-        if (startWSMessage.status) {
-          watchWS && watchWS.close()
-
-          watchWS = new WebSocket(WSURL)
-
-          watchWS.onopen = function () {
-            watchWS.send(JSON.stringify({
-              route: "watch-qbe",
-              data: { operationId }
-            }))
-          }
-
-          watchWS.onmessage = async function (evt) {
-
-            const watchWSMessage = JSON.parse(evt.data)
-
-            console.log(watchWSMessage)
+        let watchWS = undefined
+        const startM = JSON.parse(evt.data)
 
 
-            if (watchWSMessage.status) {
-              if (watchWSMessage.data.progress === 100) {
-                const fetchQBEResult = await (await fetch(`${endPoint}?id=${operationId}`)).json()
-                setQBEResult(fetchQBEResult)
-              }
-              else {
-                setQBEResult(watchWSMessage)
-              }
-            }
-            else {
-              setQBEResult(watchWSMessage)
-            }
-          }
-
-          watchWS.onclose = function () {
-            setQBEMessage("Watch Connection is closed")
-          }
-
-        }
-        else {
-          setQBEResult(startWSMessage)
+        QBE.terminate.onclick = async () => {
+          await (await fetch(`${endPoint}/search/terminate-qbe?operationId=${startM.data.operationId}`)).json()
         }
 
+        const startStatus = startM.status
+        /* eslint-disable */
+        switch (startStatus) {
+          case codes.INTERNAL_SERVER_ERROR:
+            console.log(startM)
+            break;
+          case codes.COMPLETED_SUCCESSFULLY:
+            setQBEMessage("Completed")
+            break;
+          case codes.OK:
+            watchWS && watchWS.close()
+
+            watchWS = new WebSocket(WSURL)
+
+            watchWS.onopen = function () {
+              watchWS.send(JSON.stringify({
+                route: "watch-qbe",
+                data: { operationId: startM.data.operationId }
+              }))
+            }
+
+            watchWS.onmessage = async function (evt) {
+
+              const watchM = JSON.parse(evt.data)
+              const watchStatus = watchM.status
+              setQBEResult(watchM)
+              switch (watchStatus) {
+                case codes.PROGRESS:
+                  if (watchM.data.results.length) {
+                    results.push(...watchM.data.results)
+                  }
+                  setQBEResult({ progress: watchM.data.progress, results: results })
+                  break;
+                default:
+                  console.log(watchM)
+              }
+            }
+            watchWS.onclose = function () {
+              setQBEMessage("Watch Connection is closed")
+            }
+            break;
+          default:
+            console.log(startM)
+            break;
+        }
+        /* eslint-enable */
       }
-
       startWS.onclose = function () {
         setQBEMessage("Start Connection is closed")
       }
     }
-    else {
-      setQBEResult(QBEPostResult)
-    }
+
+    reader.readAsDataURL(QBE.example.files[0])
 
   }
 }

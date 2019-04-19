@@ -7,15 +7,12 @@ class WSSRouter {
     this._searchController = new WSSSearchController()
     this._routes = {
       ["start-qbe"]: this._searchController.startQBE,
-      ["start-esf"]: this._searchController.startESF,
       ["watch-qbe"]: this._searchController.watchQBE,
-      ["watch-esf"]: this._searchController.watchESF,
-      ["update-esf-progress"]: this._searchController.updateESFProgress,
-      ["update-qbe-progress"]: this._searchController.updateQBEProgress
+      ["progress-qbe"]: this._searchController.progressQBE
     }
   }
 
-  use = (route, data, ws, sharedData) => {
+  use = (route, data, ws, operationEE) => {
     if (route !== "use") {
       const requestedController = this._routes[route]
       if (typeof requestedController !== "function") {
@@ -30,7 +27,7 @@ class WSSRouter {
         })
       }
       else {
-        requestedController(data, ws, sharedData)
+        requestedController(data, ws, operationEE)
       }
     }
     else {
