@@ -1,5 +1,5 @@
 {
-  "name": "via-web-app",
+  "name": "via-web-api",
   "version": "1.0.0",
   "scripts": {
     "start": "webpack --mode development --progress && nodemon lib/start-app",
@@ -7,7 +7,7 @@
     "build": "webpack --mode development --progress --profile",
     "release": "webpack --mode production --progress --profile"
   },
-  "repository": "https://github.com/Zeromika/via-web-app",
+  "repository": "https://github.com/hamit-zor/via-web-api",
   "author": "Hamit Zor <thenrerise@gmail.com>",
   "license": "MIT",
   "dependencies": {
