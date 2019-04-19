@@ -1,5 +1,4 @@
 /**
- * @fileoverview Socket server initializater for query by example service.
  * @author thenrerise@gmail.com (Hamit Zor)
  */
 

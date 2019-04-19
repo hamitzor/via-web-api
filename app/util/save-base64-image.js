@@ -1,5 +1,4 @@
 /**
- * @fileoverview Function to save Base64 encoded images.
  * @author thenrerise@gmail.com (Hamit Zor)
  */
 

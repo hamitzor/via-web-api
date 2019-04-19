@@ -1,5 +1,4 @@
 /**
- * @fileoverview Test script to be used in search socket test page.
  * @author thenrerise@gmail.com (Hamit Zor)
  */
 

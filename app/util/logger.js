@@ -1,5 +1,4 @@
 /**
- * @fileoverview Logger class that handles logging.
  * @author thenrerise@gmail.com (Hamit Zor)
  */
 

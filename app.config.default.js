@@ -1,3 +1,7 @@
+/**
+ * @author thenrerise@gmail.com (Hamit Zor)
+ */
+
 module.exports = {
   "server:host": "http://localhost",
   "server:port": 3000,

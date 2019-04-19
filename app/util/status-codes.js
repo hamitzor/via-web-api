@@ -1,3 +1,7 @@
+/**
+ * @author thenrerise@gmail.com (Hamit Zor)
+ */
+
 export default {
   STARTED: 10,
   INTERNAL_SERVER_ERROR: 1,

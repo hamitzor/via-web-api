@@ -1,3 +1,7 @@
+/**
+ * @author thenrerise@gmail.com (Hamit Zor)
+ */
+
 import mysql from "mysql2/promise"
 import getConfig from "../util/config-fetcher"
 

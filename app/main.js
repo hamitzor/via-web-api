@@ -1,3 +1,7 @@
+/**
+ * @author thenrerise@gmail.com (Hamit Zor)
+ */
+
 import "@babel/polyfill"
 import "source-map-support/register"
 import express from "express"

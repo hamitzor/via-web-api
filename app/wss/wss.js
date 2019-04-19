@@ -1,3 +1,7 @@
+/**
+ * @author thenrerise@gmail.com (Hamit Zor)
+ */
+
 import Logger from "../util/logger"
 import getConfig from "../util/config-fetcher"
 import WebSocket from "ws"

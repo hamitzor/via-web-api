@@ -1,5 +1,4 @@
 /**
- * @fileoverview Service class for handling system calls deal with search operations.
  * @author thenrerise@gmail.com (Hamit Zor)
  */
 

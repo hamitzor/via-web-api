@@ -1,3 +1,7 @@
+/**
+ * @author thenrerise@gmail.com (Hamit Zor)
+ */
+
 import defaultConfig from "../../app.config.default"
 import userConfig from "../../app.config"
 

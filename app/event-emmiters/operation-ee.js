@@ -1,3 +1,7 @@
+/**
+ * @author thenrerise@gmail.com (Hamit Zor)
+ */
+
 import { EventEmitter } from "events"
 
 class OperationEE extends EventEmitter {
