@@ -25,6 +25,7 @@ const domain = getConfig("server:host")
 app.use(compression())
 app.use(cookieParser())
 app.use(express.static(path.resolve(__dirname)))
+app.use(cors())
 
 const operationEE = new OperationEE()
 
@@ -54,7 +55,7 @@ app.get("/test/file-upload", function (req, res) {
   )
 })
 
-app.use("/video", [cors(), urlencoded({ extended: true })], videoRoutes)
+app.use("/video", urlencoded({ extended: true }), videoRoutes)
 
 app.use("/search", searchRoutes)
 

@@ -12,6 +12,7 @@ export const getVideos = (req, res) => {
     })
     .catch(err => {
       console.log(err)
+      res.status(400).json(err)
     })
 }
 
@@ -22,7 +23,7 @@ export const getVideo = (req, res) => {
       res.status(200).json(...queryRows)
     })
     .catch(err => {
-      console.log(err)
+      res.status(400).json(err)
     })
 }
 
@@ -58,6 +59,6 @@ export const deleteVideo = (req, res) => {
       })
     })
     .catch(err => {
-      console.log(err)
+      res.status(204).json(err)
     })
 }
