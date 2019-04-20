@@ -3,28 +3,28 @@
  */
 
 import getConfig from "../../util/config-fetcher"
-import ArgumentListModel from "../../models/argument-list-model"
 import validator from "validator"
 import { spawn } from "child_process"
 import WSSController from "./wss-controller"
 import codes from "../../util/status-codes"
 import saveBase64Image from "../../util/save-base64-image"
 import crypto from "crypto"
-import OptionToStringConverter from "../../util/option-to-string-converter"
+import CLIArgsToList from "../../util/cli-args-to-list"
 
 class WSSSearchController extends WSSController {
   constructor() {
     super()
-    this._operationModel = new ArgumentListModel()
-    this._optionConverter = new OptionToStringConverter({
-      "api": true,
-      "websocket": true,
-      "db-host": getConfig("database:host"),
-      "db-username": getConfig("database:username"),
-      "db-password": getConfig("database:password"),
-      "db-name": getConfig("database:name"),
-      "ws-host": getConfig("server:host").replace("http://", "").replace("https://", ""),
-      "ws-port": getConfig("server:port"),
+    this._CLIArgsToList = new CLIArgsToList({
+      commonArgs: {
+        "api": true,
+        "db-host": getConfig("database:host"),
+        "db-username": getConfig("database:username"),
+        "db-password": getConfig("database:password"),
+        "db-name": getConfig("database:name"),
+        "websocket": true,
+        "ws-host": getConfig("server:host").replace("http://", "").replace("https://", ""),
+        "ws-port": getConfig("server:port"),
+      }
     })
   }
 
@@ -37,25 +37,27 @@ class WSSSearchController extends WSSController {
       if (begin && !validator.isInt(begin + "", { min: 0.0 })) { throw new Error("Invalid begin") }
       if (end && !validator.isInt(end + "", { min: 0.0 })) { throw new Error("Invalid end") }
 
+      const imagePath = await saveBase64Image(encodedImage)
+
       const operationId = crypto.randomBytes(8).toString("hex")
 
-      const options = {
-        min,
-        begin,
-        end,
+      const optionalArgs = {
+        "min": min,
+        "begin": begin,
+        "end": end,
         "ws-route": "progress-qbe",
         "operation-id": operationId
       }
 
-      const optionVector = this._optionConverter.convert(options)
+      const optionalArgsList = this._CLIArgsToList.convert(optionalArgs)
 
-      const imagePath = await saveBase64Image(encodedImage)
-
-      const argv = ["-m", "src.main_scripts.qbe", videoId, imagePath, ...optionVector]
+      const argsList = ["-m", "src.main_scripts.qbe", videoId, imagePath, ...optionalArgsList]
 
       const env = { PYTHONPATH: getConfig("module-path:search") }
 
-      const process = spawn("python", argv, { env })
+      const process = spawn("python", argsList, { env })
+
+      this._send(ws, codes.OK, { operationId })
 
       process.on("exit", async (code) => {
         try {
@@ -91,8 +93,6 @@ class WSSSearchController extends WSSController {
           process.kill("SIGUSR1")
         }, 1000)
       })
-
-      this._send(ws, codes.OK, { operationId })
     }
     catch (err) {
       this._logger.error(err)

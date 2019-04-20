@@ -11,6 +11,4 @@ const searchController = new SearchController()
 
 router.get("/terminate-qbe", searchController.terminateQBE)
 
-router.get("/esf", searchController.ESF)
-
 export default router
