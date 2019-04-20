@@ -10,7 +10,7 @@ export default (configName) => {
   if (!configValue) {
     configValue = defaultConfig[configName]
   }
-  if (!configValue) {
+  if (configValue === undefined) {
     throw Error(`No such configuration found : ${configName}`)
   }
 
