@@ -4,7 +4,7 @@
 
 import db from "../util/database"
 
-export default class Video {
+export default class VideoModel {
   static fetchAll() {
     return db.execute("SELECT * FROM videos")
   }

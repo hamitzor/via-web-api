@@ -2,11 +2,11 @@
  * @author kgnugur@gmail.com (Kagan Ugur)
  */
 
-import Video from "../models/video"
+import VideoModel from "../models/video-model"
 import formidable from "formidable"
 
 export const getVideos = (req, res) => {
-  Video.fetchAll()
+  VideoModel.fetchAll()
     .then(([queryRows, queryFields]) => {
       res.status(200).json(queryRows)
     })
@@ -18,7 +18,7 @@ export const getVideos = (req, res) => {
 
 export const getVideo = (req, res) => {
   const videoId = req.params.videoId
-  Video.fetchById(videoId)
+  VideoModel.fetchById(videoId)
     .then(([queryRows, queryFields]) => {
       res.status(200).json(...queryRows)
     })
@@ -52,7 +52,7 @@ export const postVideo = (req, res) => {
 
 export const deleteVideo = (req, res) => {
   const videoId = req.params.videoId
-  Video.deleteById(videoId)
+  VideoModel.deleteById(videoId)
     .then(([queryRows, queryFields]) => {
       res.status(200).json({
         message: `Post with id:${videoId} is deleted`

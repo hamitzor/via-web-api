@@ -13,11 +13,12 @@ import cors from "cors"
 import WSS from "./wss/wss"
 import getConfig from "./util/config-fetcher"
 import http from "http"
-import videoRouter from "./routes/video"
-import queryRouter from "./routes/query-router"
+import videoRouter from "./routers/video-router"
+import queryRouter from "./routers/query-router"
+import homeRouter from "./routers/home-router"
+import testRouter from "./routers/test-router"
 import OperationEE from "./event-emmiters/operation-ee"
-import homeRouter from "./routes/home-router"
-import testRouter from "./routes/test-router"
+
 
 const app = express()
 const server = http.createServer(app)

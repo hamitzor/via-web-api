@@ -3,7 +3,7 @@
  */
 
 import express from "express"
-import * as videoControllers from "../controllers/video"
+import * as videoControllers from "../controllers/video-controller"
 
 const router = express.Router()
 
