@@ -53,7 +53,7 @@ class WSSQueryController extends WSSController {
 
       const argsList = ["-m", "src.main_scripts.qbe", videoId, imagePath, ...optionalArgsList]
 
-      const env = { PYTHONPATH: getConfig("module-path:query") }
+      const env = { PYTHONPATH: getConfig("module-path:qbe") }
 
       const process = spawn("python", argsList, { env })
 
