@@ -9,9 +9,9 @@ module.exports = {
   "database:username": "",
   "database:password": "",
   "database:name": "via",
-  "module-path:search": "/home/hamit/via",
+  "module-path:query": "/home/hamit/via",
   "logging:enabled": true,
-  "logging:directory:search": "/var/log",
+  "logging:directory:query": "/var/log",
   "logging:directory:wss": "/var/log",
   "temporary-directory": "/tmp",
 }

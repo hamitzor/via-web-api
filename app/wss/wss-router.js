@@ -2,18 +2,15 @@
  * @author thenrerise@gmail.com (Hamit Zor)
  */
 
-import WSSSearchController from "./wss-controllers/wss-search-controller"
+import getConfig from "../util/config-fetcher"
+import Logger from "../util/logger"
+import routes from "./wss-routes"
 
 
 class WSSRouter {
-  constructor(logger) {
-    this._logger = logger
-    this._searchController = new WSSSearchController()
-    this._routes = {
-      ["start-qbe"]: this._searchController.startQBE,
-      ["watch-qbe"]: this._searchController.watchQBE,
-      ["progress-qbe"]: this._searchController.progressQBE
-    }
+  constructor() {
+    this._logger = new Logger(getConfig("logging:directory:wss"), !getConfig("logging:enabled"))
+    this._routes = routes
   }
 
   use = (route, data, ws, operationEE) => {

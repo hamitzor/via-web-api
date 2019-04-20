@@ -21,7 +21,7 @@ class Logger {
   _path = () => path.resolve(this._directory, `${this._date()}.log`)
 
 
-  _log = async (message) => {
+  _log = (message) => {
     const time = this._time()
     const path = this._path()
 

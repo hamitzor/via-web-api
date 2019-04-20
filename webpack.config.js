@@ -15,15 +15,15 @@ const clientCommonConfigs = {
   context: path.resolve(__dirname, "client-test-scripts"),
 }
 
-const searchTestScriptConfig = function (env, argv) {
+const queryTestScriptConfig = function (env, argv) {
   const mode = argv.mode
   return {
     mode: mode,
     ...clientCommonConfigs,
-    entry: "./search-test-script.js",
+    entry: "./query-test-script.js",
     output: {
       path: path.resolve(__dirname, "lib"),
-      filename: "search-test-script-bundle.js",
+      filename: "query-test-script-bundle.js",
     }
   }
 }
@@ -53,4 +53,4 @@ const serverConfig = function (env, argv) {
 }
 
 
-module.exports = [searchTestScriptConfig, serverConfig]
+module.exports = [queryTestScriptConfig, serverConfig]

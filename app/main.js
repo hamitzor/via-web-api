@@ -13,9 +13,11 @@ import cors from "cors"
 import WSS from "./wss/wss"
 import getConfig from "./util/config-fetcher"
 import http from "http"
-import videoRoutes from "./routes/video"
-import searchRoutes from "./routes/search-router"
-import OperationEE from "./event-emmiters"
+import videoRouter from "./routes/video"
+import queryRouter from "./routes/query-router"
+import OperationEE from "./event-emmiters/operation-ee"
+import homeRouter from "./routes/home-router"
+import testRouter from "./routes/test-router"
 
 const app = express()
 const server = http.createServer(app)
@@ -31,33 +33,15 @@ const operationEE = new OperationEE()
 
 app.set("operationEE", operationEE)
 
-new WSS({ server, operationEE }).attachHandlers()
+new WSS({ server, operationEE }).attachEventHandlers()
 
-app.get("/", function (req, res) {
-  res.sendFile(path.resolve(__dirname, "../client-test-pages/home.html"))
-})
+app.use("/", homeRouter)
 
-app.get("/test", function (req, res) {
-  res.sendFile(
-    path.resolve(__dirname, "../client-test-pages/test-page-home.html")
-  )
-})
+app.use("/test", testRouter)
 
-app.get("/test/search-test", function (req, res) {
-  res.sendFile(
-    path.resolve(__dirname, "../client-test-pages/test-page-search.html")
-  )
-})
+app.use("/video", urlencoded({ extended: true }), videoRouter)
 
-app.get("/test/file-upload", function (req, res) {
-  res.sendFile(
-    path.resolve(__dirname, "../client-test-pages/test-page-upload-file.html")
-  )
-})
-
-app.use("/video", urlencoded({ extended: true }), videoRoutes)
-
-app.use("/search", searchRoutes)
+app.use("/query", queryRouter)
 
 server.listen(port, () => {
   console.log(`Application is online at ${domain}:${port}`)

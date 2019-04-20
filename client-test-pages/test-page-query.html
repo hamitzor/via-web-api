@@ -38,17 +38,17 @@
     }
 
     #qbe-root,
-    #esf-root {
+    #eqf-root {
       width: 500px
     }
   </style>
 </head>
 
 <body>
-  <h1>VIA API - Search - Test</h1>
+  <h1>VIA API - Query - Test</h1>
   <div id="root">
     <div id="qbe-root">
-      <h2>Query by Example</h2>
+      <h2>QBE Test</h2>
       <label for="qbe-end-point">Endpoint url:</label><br />
       <input name="end-point" id="qbe-end-point"><br /><br />
 
@@ -64,7 +64,7 @@
       <label for="qbe-min">Minimum similarity (between 0.1 and 1):</label><br />
       <input name="min" id="qbe-min" type="number" value="0.1"><br /><br />
 
-      <label>Search between seconds</label><br /><br />
+      <label>Query between seconds</label><br /><br />
       <label for="qbe-begin">From:</label><br />
       <input name="begin" id="qbe-begin" type="number" value=""><br /><br />
       <label for="qbe-end">To:</label><br />
@@ -76,23 +76,8 @@
       <h4 id="qbe-message"></h4>
       <pre><code id="qbe-result"></code></pre>
     </div>
-
-    <div id="esf-root">
-      <h2>Extract Search</h2>
-      <label for="esf-end-point">Endpoint url:</label><br />
-      <input id="esf-end-point"><br /><br />
-
-      <label for="esf-video-id">Video ID:</label><br />
-      <input id="esf-video-id" type="number" value="1"><br /><br />
-
-
-      <button id="esf-submit">Test Extract Search Features</button>
-
-      <h4 id="esf-message"></h4>
-      <pre><code id="esf-result"></code></pre>
-    </div>
   </div>
-  <script src="/search-test-script-bundle.js"></script>
+  <script src="/query-test-script-bundle.js"></script>
 </body>
 
 </html>

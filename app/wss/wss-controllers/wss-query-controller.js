@@ -11,7 +11,7 @@ import saveBase64Image from "../../util/save-base64-image"
 import crypto from "crypto"
 import CLIArgsToList from "../../util/cli-args-to-list"
 
-class WSSSearchController extends WSSController {
+class WSSQueryController extends WSSController {
   constructor() {
     super()
     this._CLIArgsToList = new CLIArgsToList({
@@ -53,7 +53,7 @@ class WSSSearchController extends WSSController {
 
       const argsList = ["-m", "src.main_scripts.qbe", videoId, imagePath, ...optionalArgsList]
 
-      const env = { PYTHONPATH: getConfig("module-path:search") }
+      const env = { PYTHONPATH: getConfig("module-path:query") }
 
       const process = spawn("python", argsList, { env })
 
@@ -131,4 +131,4 @@ class WSSSearchController extends WSSController {
   }
 }
 
-export default WSSSearchController
+export default WSSQueryController

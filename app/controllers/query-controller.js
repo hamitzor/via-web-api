@@ -7,11 +7,11 @@ import getConfig from "../util/config-fetcher"
 import Controller from "./controller"
 import codes from "../util/status-codes"
 
-export default class SearchController extends Controller {
+export default class QueryController extends Controller {
 
   constructor() {
     super()
-    this._logger = new Logger(getConfig("logging:directory:search"), !getConfig("logging:enabled"))
+    this._logger = new Logger(getConfig("logging:directory:query"), !getConfig("logging:enabled"))
   }
 
   terminateQBE = async (req, res) => {

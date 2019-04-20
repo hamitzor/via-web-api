@@ -76,7 +76,7 @@ const QBETest = () => {
 
 
         QBE.terminate.onclick = async () => {
-          await (await fetch(`${endPoint}/search/terminate-qbe?operationId=${startM.data.operationId}`)).json()
+          await (await fetch(`${endPoint}/query/terminate-qbe?operationId=${startM.data.operationId}`)).json()
         }
 
         const startStatus = startM.status
@@ -136,59 +136,6 @@ const QBETest = () => {
   }
 }
 
-
-const esfTest = () => {
-  const esf = {
-    endPoint: document.getElementById("esf-end-point"),
-    videoId: document.getElementById("esf-video-id"),
-    submit: document.getElementById("esf-submit"),
-    message: document.getElementById("esf-message"),
-    result: document.getElementById("esf-result"),
-  }
-
-  let ws = undefined
-
-  esf.endPoint.value = `${getConfig("server:host")}:${getConfig("server:port")}/search/esf`
-
-  esf.submit.onclick = async () => {
-    const endPoint = esf.endPoint.value
-    const videoId = parseInt(esf.videoId.value)
-
-    const result = await fetch(`${endPoint}?videoId=${videoId}`)
-
-    const esfResult = await result.json()
-    esf.message.innerHTML = "Extract Search Features respond is received:"
-    esf.result.innerHTML = JSON.stringify(esfResult, null, "   ")
-
-    if (esfResult.status) {
-      const data = {
-        videoId
-      }
-
-      ws && ws.close()
-
-      ws = new WebSocket(`ws:${getConfig("server:host").replace("http://", "")}:${getConfig("server:port")}`)
-
-      ws.onopen = function () {
-        ws.send(JSON.stringify({ route: "watch-esf", data }))
-        esf.message.innerHTML = `Extract Search Features Watch request sent with parameters videoId = ${videoId} waiting for response...`
-        esf.result.innerHTML = ""
-      }
-
-      ws.onmessage = function (evt) {
-        esf.message.innerHTML = "Extract Search Features Watch respond is received:"
-        esf.result.innerHTML = JSON.stringify(JSON.parse(evt.data), null, "   ")
-        hljs.highlightBlock(esf.result)
-      }
-
-      ws.onclose = function () {
-        esf.message.innerHTML = "Connection is closed"
-      }
-    }
-  }
-}
-
 document.addEventListener("DOMContentLoaded", () => {
   QBETest()
-  esfTest()
 })
