@@ -3,6 +3,8 @@
  */
 
 import VideoModel from "../models/video-model"
+import path from "path"
+import { spawn } from "child_process"
 
 export const getVideos = (req, res) => {
   VideoModel.fetchAll()
@@ -27,8 +29,22 @@ export const getVideo = (req, res) => {
 }
 
 export const postVideo = (req, res) => {
-  // console.log(req.file)
-  // console.log(req.body)
+  const scripPath = path.join(
+    __dirname,
+    "/../../helpers/extract_video_meta_data.py"
+  )
+
+  return spawn("python", ["-u", scripPath, req.file.path])
+  // print output of script
+  subprocess.stdout.on("data", data => {
+    console.log(`data:${data}`)
+  })
+  subprocess.stderr.on("data", data => {
+    console.log(`error:${data}`)
+  })
+  subprocess.stderr.on("close", () => {
+    console.log("Closed")
+  })
 }
 
 export const deleteVideo = (req, res) => {
