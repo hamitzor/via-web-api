@@ -20,7 +20,6 @@ import homeRouter from "./routers/home-router"
 import testRouter from "./routers/test-router"
 import OperationEE from "./event-emmiters/operation-ee"
 
-
 const app = express()
 const server = http.createServer(app)
 const port = getConfig("server:port")
@@ -30,11 +29,7 @@ app.use(compression())
 app.use(cookieParser())
 app.use(express.static(path.resolve(__dirname)))
 app.use(cors())
-app.use(
-  "/static",
-  express.static(path.join(__dirname, "/../../media-source/"))
-)
-
+app.use("/static", express.static(path.join(__dirname, "/../../media-source/")))
 
 const operationEE = new OperationEE()
 
