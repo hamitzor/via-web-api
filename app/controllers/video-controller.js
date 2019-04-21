@@ -3,7 +3,6 @@
  */
 
 import VideoModel from "../models/video-model"
-import formidable from "formidable"
 
 export const getVideos = (req, res) => {
   VideoModel.fetchAll()
@@ -28,26 +27,8 @@ export const getVideo = (req, res) => {
 }
 
 export const postVideo = (req, res) => {
-  new formidable.IncomingForm()
-    .parse(req)
-    .on("field", (name, field) => {
-      console.log("Field", name, field)
-    })
-    .on("file", (name, file) => {
-      console.log("Uploaded file", name, file)
-    })
-    .on("aborted", () => {
-      console.error("Request aborted by the user")
-    })
-    .on("error", err => {
-      console.error("Error", err)
-      throw err
-    })
-    .on("end", () => {
-      res.status(201).json({
-        message: "Post created succesfully"
-      })
-    })
+  // console.log(req.file)
+  // console.log(req.body)
 }
 
 export const deleteVideo = (req, res) => {
