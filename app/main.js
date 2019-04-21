@@ -1,5 +1,6 @@
 /**
  * @author thenrerise@gmail.com (Hamit Zor)
+ * @author kgnugur@gmail.com (Kagan Ugur)
  */
 
 import "@babel/polyfill"
@@ -29,6 +30,11 @@ app.use(compression())
 app.use(cookieParser())
 app.use(express.static(path.resolve(__dirname)))
 app.use(cors())
+app.use(
+  "/static",
+  express.static(path.join(__dirname, "/../../media-source/"))
+)
+
 
 const operationEE = new OperationEE()
 
