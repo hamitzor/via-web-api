@@ -4,8 +4,8 @@ const queryController = new WSSQueryController()
 
 const routes = {
   "start-qbe": queryController.startQBE,
-  "watch-qbe": queryController.watchQBE,
-  "progress-qbe": queryController.progressQBE
+  "watch-operation": queryController.watchOperation,
+  "progress-operation": queryController.progressOperation
 }
 
 

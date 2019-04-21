@@ -10,5 +10,6 @@ const queryRouter = express.Router()
 const queryController = new QueryController()
 
 queryRouter.get("/terminate-qbe", queryController.terminateQBE)
+queryRouter.get("/start-eqf", queryController.startEQF)
 
 export default queryRouter

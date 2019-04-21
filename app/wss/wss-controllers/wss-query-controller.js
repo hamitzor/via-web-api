@@ -3,13 +3,13 @@
  */
 
 import getConfig from "../../util/config-fetcher"
-import validator from "validator"
 import { spawn } from "child_process"
 import WSSController from "./wss-controller"
 import codes from "../../util/status-codes"
 import saveBase64Image from "../../util/save-base64-image"
 import crypto from "crypto"
 import CLIArgsToList from "../../util/cli-args-to-list"
+import { isString, isUndefined, isFloat } from "../../util/validation-helpers"
 
 class WSSQueryController extends WSSController {
   constructor() {
@@ -23,19 +23,26 @@ class WSSQueryController extends WSSController {
         "db-name": getConfig("database:name"),
         "websocket": true,
         "ws-host": getConfig("server:host").replace("http://", "").replace("https://", ""),
-        "ws-port": getConfig("server:port"),
+        "ws-port": getConfig("server:port")
       }
     })
   }
 
   startQBE = async ({ userId, videoId, encodedImage, min, begin, end }, ws, operationEE) => {
     try {
-      if (!encodedImage) { throw new Error("Example file is missing") }
-      if (!validator.isInt(videoId + "")) { throw new Error("Invalid videoId") }
-      if (!validator.isInt(userId + "")) { throw new Error("Invalid userId") }
-      if (min && !validator.isFloat(min + "", { min: 0.0, max: 1.0 })) { throw new Error("Invalid min") }
-      if (begin && !validator.isInt(begin + "", { min: 0.0 })) { throw new Error("Invalid begin") }
-      if (end && !validator.isInt(end + "", { min: 0.0 })) { throw new Error("Invalid end") }
+      /*Validation*/
+      try {
+        if (!Number.isInteger(userId)) { throw new Error("Invalid userId") }
+        if (!Number.isInteger(videoId)) { throw new Error("Invalid videoId") }
+        if (!isString(encodedImage)) { throw new Error("Invalid encodedImage") }
+        if (!isUndefined(min) && !isFloat(min)) { throw new Error("Invalid min") }
+        if (!isUndefined(begin) && !Number.isInteger(begin)) { throw new Error("Invalid begin") }
+        if (!isUndefined(end) && !Number.isInteger(end)) { throw new Error("Invalid end") }
+      } catch (err) {
+        this._sendAndClose(ws, codes.BAD_REQUEST, { message: err.message })
+        return
+      }
+      /*Validation*/
 
       const imagePath = await saveBase64Image(encodedImage)
 
@@ -45,7 +52,7 @@ class WSSQueryController extends WSSController {
         "min": min,
         "begin": begin,
         "end": end,
-        "ws-route": "progress-qbe",
+        "ws-route": "progress-operation",
         "operation-id": operationId
       }
 
@@ -100,30 +107,41 @@ class WSSQueryController extends WSSController {
     }
   }
 
-  watchQBE = async ({ operationId }, ws, operationEE) => {
+  watchOperation = async ({ operationId }, ws, operationEE) => {
+    /*Validation*/
     try {
-
-      if (!operationId) {
-        throw new Error("Invalid operationId")
-      }
-
+      if (!isString(operationId)) { throw new Error("Invalid operationId") }
+      operationId = operationId.trim()
+      if (operationId.length !== 16) { throw new Error("Invalid operationId") }
+    } catch (err) {
+      this._sendAndClose(ws, codes.BAD_REQUEST, { message: err.message })
+      return
+    }
+    /*Validation*/
+    try {
       operationEE.onProgress(operationId, (data) => {
         this._send(ws, codes.PROGRESS, data)
       })
-
     } catch (err) {
       this._logger.error(err)
       this._sendAndClose(ws, codes.INTERNAL_SERVER_ERROR)
     }
   }
 
-  progressQBE = ({ operationId, progress, results }, ws, operationEE) => {
+  progressOperation = ({ operationId, progress, results }, ws, operationEE) => {
+    /*Validation*/
     try {
-      if (!operationId) {
-        throw new Error("Invalid operationId")
-      }
+      if (!isString(operationId)) { throw new Error("Invalid operationId") }
+      operationId = operationId.trim()
+      if (operationId.length !== 16) { throw new Error("Invalid operationId") }
+      if (!isUndefined(progress) && !Number.isInteger(progress)) { throw new Error("Invalid progress") }
+    } catch (err) {
+      this._sendAndClose(ws, codes.BAD_REQUEST, { message: err.message })
+      return
+    }
+    /*Validation*/
+    try {
       operationEE.progress(operationId, { progress, results })
-
     } catch (err) {
       this._logger.error(err)
       ws.close()

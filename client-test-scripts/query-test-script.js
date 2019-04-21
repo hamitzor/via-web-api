@@ -60,12 +60,12 @@ const QBETest = () => {
         startWS.send(JSON.stringify({
           route: "start-qbe",
           data: {
-            userId: QBE.userId.value,
+            userId: parseInt(QBE.userId.value),
             videoId: parseInt(QBE.videoId.value),
             encodedImage: reader.result,
-            min: parseInt(QBE.min.value),
-            begin: parseInt(QBE.begin.value),
-            end: parseInt(QBE.end.value),
+            min: QBE.min.value ? parseFloat(QBE.min.value) : undefined,
+            begin: QBE.begin.value ? parseInt(QBE.begin.value) : undefined,
+            end: QBE.end.value ? parseInt(QBE.end.value) : undefined,
           }
         }))
       }
@@ -95,7 +95,7 @@ const QBETest = () => {
 
             watchWS.onopen = function () {
               watchWS.send(JSON.stringify({
-                route: "watch-qbe",
+                route: "watch-operation",
                 data: { operationId: startM.data.operationId }
               }))
             }
