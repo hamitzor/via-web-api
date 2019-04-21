@@ -29,16 +29,20 @@ class WSS extends WebSocket.Server {
   }
 
   _parseMessage = (message) => {
-    let messageObject = undefined
+    let obj = undefined
 
     try {
-      messageObject = JSON.parse(message)
+      obj = JSON.parse(message)
     }
     catch (err) {
-      null
+      return undefined
     }
 
-    return messageObject
+    if (obj === null || Array.isArray(obj) || typeof obj !== "object") {
+      return undefined
+    }
+
+    return obj
   }
 
   attachEventHandlers = () => {
@@ -48,7 +52,7 @@ class WSS extends WebSocket.Server {
         const messageObject = this._parseMessage(message)
 
         if (!messageObject) {
-          this._sendAndClose(ws, codes.BAD_REQUEST, { message: "Message must be in JSON literal format" })
+          this._sendAndClose(ws, codes.BAD_REQUEST, { message: "Message must be in JSON object format" })
         }
         else {
           const { route, data } = messageObject
