@@ -34,10 +34,11 @@ export const postVideo = (req, res) => {
     "/../../helpers/extract_video_meta_data.py"
   )
 
-  return spawn("python", ["-u", scripPath, req.file.path])
+  const subprocess = spawn("python", ["-u", scripPath, req.file.path])
+
   // print output of script
   subprocess.stdout.on("data", data => {
-    console.log(`data:${data}`)
+    console.log(data)
   })
   subprocess.stderr.on("data", data => {
     console.log(`error:${data}`)
