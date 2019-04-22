@@ -30,8 +30,8 @@ export const getVideo = (req, res) => {
 
 export const postVideo = (req, res) => {
   const extension = filename => {
-    const index = file.originalname.indexOf(".")
-    return file.originalname.substring(index)
+    const index = filename.indexOf(".")
+    return filename.substring(index)
   }
 
   // const title = req.body.title
@@ -52,11 +52,12 @@ export const postVideo = (req, res) => {
   )
   const subprocess = spawn("python", ["-u", scripPath, req.file.path])
 
-  subprocess.stdout.on("data", data => {
-    const data = JSON.parse(data)
+  subprocess.stdout.on("data", outData => {
+    const data = JSON.parse(outData)
+    console.log(data)
     VideoModel.postVideo(
       req.body.title,
-      data.length,
+      data.lenght,
       extension(req.file.filename),
       req.file.originalname,
       req.file.size,
