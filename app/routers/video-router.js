@@ -9,7 +9,7 @@ import path from "path"
 
 var storage = multer.diskStorage({
   destination: function(req, file, cb) {
-    cb(null, path.join(__dirname, "/../../media-source/"))
+    cb(null, path.join(__dirname, "/../../media-source/video"))
   },
   filename: function(req, file, cb) {
     const index = file.originalname.indexOf(".")

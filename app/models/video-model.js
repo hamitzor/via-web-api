@@ -21,6 +21,8 @@ export default class VideoModel {
     const columns =
       "title, length, extension,  name, size, path, fps,  frame_count,  width,  height, esf_status"
 
+    const syntValues = () => values.map(val => `'${val}'`)
+
     return db.execute(`INSERT INTO videos(${columns}) VALUES(${syntValues()})`)
   }
 }
