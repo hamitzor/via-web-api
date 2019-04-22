@@ -6,6 +6,6 @@ import db from "../util/database"
 
 export default class AnomalyDetectedModel {
   static fetchById(videoId) {
-    return db.execute("SELECT * FROM detected_anomalies WHERE detected_anomalies.detected_anomaly_id IN (SELECT video_detected_anomaly.detected_anomaly_id FROM `video_detected_anomaly` WHERE video_detected_anomaly.video_id = ?)", [videoId])
+    return db.execute("SELECT * FROM video_detected_anomaly a JOIN detected_anomalies b ON b.detected_anomaly_id = a.detected_anomaly_id JOIN anomalies c ON b.rule_id=c.anomaly_id WHERE video_detected_anomaly.id = ?", [videoId])
   }
 }
