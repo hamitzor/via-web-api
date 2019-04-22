@@ -17,10 +17,11 @@ export default class VideoModel {
     return db.execute("DELETE FROM `videos` WHERE video_id = ?", [videoId])
   }
 
-  static postVideo(values) {
+  static postVideo(...values) {
     const columns =
       "title,	length,	extension,	name,	size,	path,	fps,	frame_count,	width,	height,	esf_status"
 
-    return db.execute(`INSERT INTO videos(${columns}) VALUES(${values})`)
+    console.log(`INSERT INTO videos(${columns}) VALUES('${values}')`)
+    return db.execute(`INSERT INTO videos(${columns}) VALUES('${values}')`)
   }
 }
