@@ -29,16 +29,44 @@ export const getVideo = (req, res) => {
 }
 
 export const postVideo = (req, res) => {
+  const extension = filename => {
+    const index = file.originalname.indexOf(".")
+    return file.originalname.substring(index)
+  }
+
+  // const title = req.body.title
+  // const length = data.length
+  // const extension = extension(req.file.filename)
+  // const name = req.file.originalname
+  // const size = req.file.size
+  // const path = req.file.path
+  // const fps = data.fps
+  // const frame_count = data.total_frame
+  // const width = data.width
+  // const height = data.height
+  // const esf_status = 1
+
   const scripPath = path.join(
     __dirname,
     "/../../helpers/extract_video_meta_data.py"
   )
-
   const subprocess = spawn("python", ["-u", scripPath, req.file.path])
 
-  // print output of script
   subprocess.stdout.on("data", data => {
-    console.log(data)
+    const data = JSON.parse(data)
+    VideoModel.postVideo(
+      req.body.title,
+      data.length,
+      extension(req.file.filename),
+      req.file.originalname,
+      req.file.size,
+      req.file.path,
+      data.fps,
+      data.total_frame,
+      data.width,
+      data.height,
+      1
+    )
   })
   subprocess.stderr.on("data", data => {
     console.log(`error:${data}`)
