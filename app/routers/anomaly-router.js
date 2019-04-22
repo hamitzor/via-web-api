@@ -8,6 +8,5 @@ const anomalyRouter = express.Router()
 
 const router = express.Router()
 
-router.get("/anomaly", videoControllers.getVideos)
 
 router.get("/anomaly/:videoId", videoControllers.getAnomaliesByVideo)
