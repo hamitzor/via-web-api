@@ -18,6 +18,7 @@ import videoRouter from "./routers/video-router"
 import queryRouter from "./routers/query-router"
 import homeRouter from "./routers/home-router"
 import testRouter from "./routers/test-router"
+import anomalyRouter from "./routers/anomaly-router"
 import OperationEE from "./event-emmiters/operation-ee"
 
 const app = express()
@@ -44,6 +45,8 @@ app.use("/test", testRouter)
 app.use("/video", urlencoded({ extended: true }), videoRouter)
 
 app.use("/query", queryRouter)
+
+app.use("/anomaly", anomalyRouter)
 
 server.listen(port, () => {
   console.log(`Application is online at ${domain}:${port}`)
