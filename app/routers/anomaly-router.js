@@ -10,3 +10,5 @@ const router = express.Router()
 
 
 router.get("/anomaly/:videoId", videoControllers.getAnomaliesByVideo)
+
+export default router
