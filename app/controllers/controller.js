@@ -5,6 +5,8 @@
 
 export default class Controller {
   _send = (res, status, data) => {
-    res.send(JSON.stringify({ status, data })).end()
+    if (!res.heardersSent) {
+      res.send(JSON.stringify({ status, data })).end()
+    }
   }
 }

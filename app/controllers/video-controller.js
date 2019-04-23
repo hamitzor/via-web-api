@@ -55,7 +55,7 @@ export const postVideo = (req, res) => {
   subprocess.stdout.on("data", outData => {
     const data = JSON.parse(outData)
     console.log(data)
-    VideoModel.postVideo(
+    VideoModel.save(
       req.body.title,
       data.lenght,
       extension(req.file.filename),

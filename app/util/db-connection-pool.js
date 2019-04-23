@@ -6,7 +6,7 @@
 import mysql from "mysql2"
 import fetchConfig from "./config-fetcher"
 
-const DB_CONFIG = {
+const DBConfig = {
   host: fetchConfig("database:host"),
   user: fetchConfig("database:username"),
   password: fetchConfig("database:password"),
@@ -14,6 +14,6 @@ const DB_CONFIG = {
   dateStrings: true
 }
 
-const DBConnectionPool = mysql.createPool(DB_CONFIG)
+const DBConnectionPool = mysql.createPool(DBConfig)
 
 export default DBConnectionPool.promise()

@@ -1,28 +1,35 @@
 /**
  * @author kgnugur@gmail.com (Kagan Ugur)
+ * @author thenrerise@gmail.com (Hamit Zor)
  */
 
-import db from "../util/database"
+import db from "../util/db-connection-pool"
 
 export default class VideoModel {
+
   static fetchAll() {
-    return db.execute("SELECT * FROM videos")
+    const sql = "SELECT * FROM videos"
+    return db.execute(sql)
   }
 
   static fetchById(videoId) {
-    return db.execute("SELECT * FROM `videos` WHERE video_id = ?", [videoId])
+    const sql = "SELECT * FROM videos WHERE video_id = ?"
+    return db.execute(sql, [videoId])
   }
 
   static deleteById(videoId) {
-    return db.execute("DELETE FROM `videos` WHERE video_id = ?", [videoId])
+    const sql = "DELETE FROM videos WHERE video_id = ?"
+    return db.execute(sql, [videoId])
   }
 
-  static postVideo(...values) {
-    const columns =
-      "title, length, extension,  name, size, path, fps,  frame_count,  width,  height, esf_status"
+  static save(video) {
+    const columns = Object.keys(video)
+    const valuePlaceholders = Array(columns.length).fill("?")
+    const values = columns.reduce((acc, column) => [...acc, video[column]], [])
 
-    const syntValues = () => values.map(val => `'${val}'`)
+    const sql = `INSERT INTO videos (${columns.join(", ")}) VALUES (${valuePlaceholders.join(", ")})`
 
-    return db.execute(`INSERT INTO videos(${columns}) VALUES(${syntValues()})`)
+
+    return db.execute(sql, values)
   }
 }
