@@ -63,9 +63,6 @@ class WSSQueryController extends WSSController {
 
       const env = { PYTHONPATH: fetchConfig("module-path:qbe") }
 
-      this._logger.info(argsList.join(" "))
-      this._logger.info(JSON.stringify(env))
-
       const process = spawn("python", argsList, { env })
 
       this._send(ws, codes.OK, { operationId })

@@ -30,7 +30,6 @@ app.use(express.static(path.resolve(__dirname)))
 app.use(cors())
 app.use("/static", express.static(path.join(__dirname, "/../../media-source/")))
 
-wss.attachEventHandlers()
 
 app.use("/", homeRouter)
 
@@ -45,3 +44,5 @@ app.use("/anomaly", anomalyRouter)
 server.listen(port, () => {
   console.log(`Application is online at ${domain}:${port}`)
 })
+
+wss.listen()

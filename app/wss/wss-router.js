@@ -9,7 +9,7 @@ import routes from "./wss-routes"
 
 class WSSRouter {
   constructor() {
-    this._logger = new Logger(fetchConfig("logging:directory:wss"), !fetchConfig("logging:enabled"))
+    this._logger = new Logger(fetchConfig("logging:directory:wss"))
   }
 
   use = (route, data, ws) => {

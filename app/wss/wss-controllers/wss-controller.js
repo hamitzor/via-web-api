@@ -8,7 +8,7 @@ import fetchConfig from "../../util/config-fetcher"
 class WSSController {
 
   constructor() {
-    this._logger = new Logger(fetchConfig("logging:directory:wss"), !fetchConfig("logging:enabled"))
+    this._logger = new Logger(fetchConfig("logging:directory:wss"))
   }
 
   _send = (ws, status, data = null) => {

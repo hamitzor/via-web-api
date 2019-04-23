@@ -12,7 +12,7 @@ import codes from "../util/status-codes"
 class WSS extends WebSocket.Server {
   constructor() {
     super({ server })
-    this._logger = new Logger(fetchConfig("logging:directory:wss"), !fetchConfig("logging:enabled"))
+    this._logger = new Logger(fetchConfig("logging:directory:wss"))
   }
 
   _sendAndClose = (webSocket, status, data) => {
@@ -44,7 +44,7 @@ class WSS extends WebSocket.Server {
     return obj
   }
 
-  attachEventHandlers = () => {
+  listen = () => {
     this.on("connection", (ws) => {
       ws.on("message", message => {
 

@@ -6,14 +6,15 @@ import fs from "fs"
 import path from "path"
 import moment from "moment"
 import clc from "cli-color"
+import fetchConfig from "../util/config-fetcher"
 
 
 
 class Logger {
 
-  constructor(directory = "/var/log", supress = false) {
+  constructor(directory) {
     this._directory = directory
-    this._supress = supress
+    this._supress = !fetchConfig("logging:enabled")
   }
 
   _date = () => moment().format("DD_MM_YYYY")

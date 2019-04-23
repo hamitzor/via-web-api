@@ -16,8 +16,8 @@ class QueryController extends Controller {
 
   constructor() {
     super()
-    this._logger = new Logger(fetchConfig("logging:directory:query"), !fetchConfig("logging:enabled"))
-    this._CLIArgsToList = new CLIArgsToList({
+    this._logger = new Logger(fetchConfig("logging:directory:query"))
+    this._cliArgsToList = new CLIArgsToList({
       commonArgs: {
         "api": true,
         "db-host": fetchConfig("database:host"),
@@ -83,7 +83,7 @@ class QueryController extends Controller {
         "operation-id": operationId
       }
 
-      const optionalArgsList = this._CLIArgsToList.convert(optionalArgs)
+      const optionalArgsList = this._cliArgsToList.convert(optionalArgs)
 
       const argsList = ["-m", "packages.main_scripts.eqf", videoId, ...optionalArgsList]
 
