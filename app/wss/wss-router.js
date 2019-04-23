@@ -10,12 +10,11 @@ import routes from "./wss-routes"
 class WSSRouter {
   constructor() {
     this._logger = new Logger(fetchConfig("logging:directory:wss"), !fetchConfig("logging:enabled"))
-    this._routes = routes
   }
 
-  use = (route, data, ws, operationEE) => {
+  use = (route, data, ws) => {
     if (route !== "use") {
-      const requestedController = this._routes[route]
+      const requestedController = routes[route]
       if (typeof requestedController !== "function") {
         ws.send(JSON.stringify({
           status: false,
@@ -28,7 +27,7 @@ class WSSRouter {
         })
       }
       else {
-        requestedController(data, ws, operationEE)
+        requestedController(data, ws)
       }
     }
     else {
@@ -45,4 +44,4 @@ class WSSRouter {
   }
 }
 
-export default WSSRouter
+export default (new WSSRouter)

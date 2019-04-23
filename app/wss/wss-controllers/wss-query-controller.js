@@ -10,6 +10,7 @@ import saveBase64Image from "../../util/save-base64-image"
 import crypto from "crypto"
 import CLIArgsToList from "../../util/cli-args-to-list"
 import { isString, isUndefined, isFloat } from "../../util/validation-helpers"
+import operationEE from "../../event-emmiters/operation-ee"
 
 class WSSQueryController extends WSSController {
   constructor() {
@@ -28,7 +29,7 @@ class WSSQueryController extends WSSController {
     })
   }
 
-  startQBE = async ({ userId, videoId, encodedImage, min, begin, end }, ws, operationEE) => {
+  startQBE = async ({ userId, videoId, encodedImage, min, begin, end }, ws) => {
     try {
       /*Validation*/
       try {
@@ -58,9 +59,12 @@ class WSSQueryController extends WSSController {
 
       const optionalArgsList = this._CLIArgsToList.convert(optionalArgs)
 
-      const argsList = ["-m", "src.main_scripts.qbe", videoId, imagePath, ...optionalArgsList]
+      const argsList = ["-m", "packages.main_scripts.qbe", videoId, imagePath, ...optionalArgsList]
 
       const env = { PYTHONPATH: fetchConfig("module-path:qbe") }
+
+      this._logger.info(argsList.join(" "))
+      this._logger.info(JSON.stringify(env))
 
       const process = spawn("python", argsList, { env })
 
@@ -107,7 +111,7 @@ class WSSQueryController extends WSSController {
     }
   }
 
-  watchOperation = async ({ operationId }, ws, operationEE) => {
+  watchOperation = async ({ operationId }, ws) => {
     /*Validation*/
     try {
       if (!isString(operationId)) { throw new Error("Invalid operationId") }
@@ -128,7 +132,7 @@ class WSSQueryController extends WSSController {
     }
   }
 
-  progressOperation = ({ operationId, progress, results }, ws, operationEE) => {
+  progressOperation = ({ operationId, progress, results }, ws) => {
     /*Validation*/
     try {
       if (!isString(operationId)) { throw new Error("Invalid operationId") }
@@ -149,4 +153,4 @@ class WSSQueryController extends WSSController {
   }
 }
 
-export default WSSQueryController
+export default (new WSSQueryController)

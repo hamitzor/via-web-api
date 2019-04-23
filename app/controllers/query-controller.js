@@ -10,8 +10,9 @@ import CLIArgsToList from "../util/cli-args-to-list"
 import { spawn } from "child_process"
 import validator from "validator"
 import crypto from "crypto"
+import operationEE from "../event-emmiters/operation-ee"
 
-export default class QueryController extends Controller {
+class QueryController extends Controller {
 
   constructor() {
     super()
@@ -42,8 +43,6 @@ export default class QueryController extends Controller {
       return
     }
     /*Validation*/
-
-    const operationEE = req.app.get("operationEE")
 
     const timeout = setTimeout(() => {
       this._send(res, codes.BAD_REQUEST, { message: "operationId is wrong" })
@@ -86,7 +85,7 @@ export default class QueryController extends Controller {
 
       const optionalArgsList = this._CLIArgsToList.convert(optionalArgs)
 
-      const argsList = ["-m", "src.main_scripts.eqf", videoId, ...optionalArgsList]
+      const argsList = ["-m", "packages.main_scripts.eqf", videoId, ...optionalArgsList]
 
       const env = { PYTHONPATH: fetchConfig("module-path:qbe") }
 
@@ -119,3 +118,5 @@ export default class QueryController extends Controller {
     }
   }
 }
+
+export default (new QueryController)

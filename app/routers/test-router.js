@@ -3,11 +3,10 @@
  */
 
 import express from "express"
-import TestController from "../controllers/test-controller"
+import testController from "../controllers/test-controller"
 
 const testRouter = express.Router()
 
-const testController = new TestController()
 
 testRouter.get("/", testController.index)
 testRouter.get("/file-upload", testController.fileUploadTest)

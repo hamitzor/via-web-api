@@ -6,23 +6,21 @@
 import "@babel/polyfill"
 import "source-map-support/register"
 import express from "express"
+import { app, server } from "./core/create-express"
 import cookieParser from "cookie-parser"
 import { urlencoded } from "body-parser"
 import compression from "compression"
 import path from "path"
 import cors from "cors"
-import WSS from "./wss/wss"
+import wss from "./wss/wss"
 import fetchConfig from "./util/config-fetcher"
-import http from "http"
 import videoRouter from "./routers/video-router"
 import queryRouter from "./routers/query-router"
 import homeRouter from "./routers/home-router"
 import testRouter from "./routers/test-router"
 import anomalyRouter from "./routers/anomaly-router"
-import OperationEE from "./event-emmiters/operation-ee"
 
-const app = express()
-const server = http.createServer(app)
+
 const port = fetchConfig("server:port")
 const domain = fetchConfig("server:host")
 
@@ -32,11 +30,7 @@ app.use(express.static(path.resolve(__dirname)))
 app.use(cors())
 app.use("/static", express.static(path.join(__dirname, "/../../media-source/")))
 
-const operationEE = new OperationEE()
-
-app.set("operationEE", operationEE)
-
-new WSS({ server, operationEE }).attachEventHandlers()
+wss.attachEventHandlers()
 
 app.use("/", homeRouter)
 

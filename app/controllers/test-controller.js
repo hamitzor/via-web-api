@@ -4,7 +4,7 @@
 
 import path from "path"
 
-export default class QueryController {
+class TestController {
 
   index = (req, res) => {
     res.sendFile(
@@ -23,8 +23,6 @@ export default class QueryController {
       path.resolve(__dirname, "../client-test-pages/test-page-upload-file.html")
     )
   }
-
-
-
-
 }
+
+export default (new TestController)

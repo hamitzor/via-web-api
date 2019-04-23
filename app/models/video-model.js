@@ -5,24 +5,24 @@
 
 import db from "../util/db-connection-pool"
 
-export default class VideoModel {
+class VideoModel {
 
-  static fetchAll() {
+  fetchAll = () => {
     const sql = "SELECT * FROM videos"
     return db.execute(sql)
   }
 
-  static fetchById(videoId) {
+  fetchById = (videoId) => {
     const sql = "SELECT * FROM videos WHERE video_id = ?"
     return db.execute(sql, [videoId])
   }
 
-  static deleteById(videoId) {
+  deleteById = (videoId) => {
     const sql = "DELETE FROM videos WHERE video_id = ?"
     return db.execute(sql, [videoId])
   }
 
-  static save(video) {
+  save = (video) => {
     const columns = Object.keys(video)
     const valuePlaceholders = Array(columns.length).fill("?")
     const values = columns.reduce((acc, column) => [...acc, video[column]], [])
@@ -33,3 +33,5 @@ export default class VideoModel {
     return db.execute(sql, values)
   }
 }
+
+export default (new VideoModel)

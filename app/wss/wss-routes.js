@@ -1,11 +1,14 @@
-import WSSQueryController from "./wss-controllers/wss-query-controller"
+/**
+ * @author thenrerise@gmail.com (Hamit Zor)
+ */
 
-const queryController = new WSSQueryController()
+import wssQueryController from "./wss-controllers/wss-query-controller"
+
 
 const routes = {
-  "start-qbe": queryController.startQBE,
-  "watch-operation": queryController.watchOperation,
-  "progress-operation": queryController.progressOperation
+  "start-qbe": wssQueryController.startQBE,
+  "watch-operation": wssQueryController.watchOperation,
+  "progress-operation": wssQueryController.progressOperation
 }
 
 

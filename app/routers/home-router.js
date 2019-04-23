@@ -3,11 +3,10 @@
  */
 
 import express from "express"
-import HomeController from "../controllers/home-controller"
+import homeController from "../controllers/home-controller"
 
 const homeRouter = express.Router()
 
-const homeController = new HomeController()
 
 homeRouter.get("/", homeController.index)
 

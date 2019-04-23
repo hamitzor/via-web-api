@@ -2,18 +2,17 @@
  * @author thenrerise@gmail.com (Hamit Zor)
  */
 
+import { server } from "../core/create-express"
 import Logger from "../util/logger"
 import fetchConfig from "../util/config-fetcher"
 import WebSocket from "ws"
-import WSSRouter from "./wss-router"
+import wssRouter from "./wss-router"
 import codes from "../util/status-codes"
 
 class WSS extends WebSocket.Server {
-  constructor({ server, operationEE }) {
+  constructor() {
     super({ server })
     this._logger = new Logger(fetchConfig("logging:directory:wss"), !fetchConfig("logging:enabled"))
-    this._router = new WSSRouter()
-    this._operationEE = operationEE
   }
 
   _sendAndClose = (webSocket, status, data) => {
@@ -57,11 +56,11 @@ class WSS extends WebSocket.Server {
         else {
           const { route, data } = messageObject
 
-          this._router.use(route, data, ws, this._operationEE)
+          wssRouter.use(route, data, ws)
         }
       })
     })
   }
 }
 
-export default WSS
+export default (new WSS)

@@ -4,7 +4,7 @@
 
 import path from "path"
 
-export default class QueryController {
+class HomeController {
 
   index = (req, res) => {
     res.sendFile(
@@ -12,3 +12,5 @@ export default class QueryController {
     )
   }
 }
+
+export default (new HomeController)

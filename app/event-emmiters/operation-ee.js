@@ -44,4 +44,4 @@ class OperationEE extends EventEmitter {
   }
 }
 
-export default OperationEE
+export default (new OperationEE)
