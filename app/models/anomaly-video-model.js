@@ -2,7 +2,7 @@
  * @author umutguler97@gmail.com (Göksen Umut Güler)
  */
 
-import db from "../util/database"
+import db from "../util/db-connection-pool"
 
 export default class AnomalyDetectedModel {
   static fetchById(videoId) {

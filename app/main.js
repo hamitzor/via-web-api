@@ -12,7 +12,7 @@ import compression from "compression"
 import path from "path"
 import cors from "cors"
 import WSS from "./wss/wss"
-import getConfig from "./util/config-fetcher"
+import fetchConfig from "./util/config-fetcher"
 import http from "http"
 import videoRouter from "./routers/video-router"
 import queryRouter from "./routers/query-router"
@@ -23,8 +23,8 @@ import OperationEE from "./event-emmiters/operation-ee"
 
 const app = express()
 const server = http.createServer(app)
-const port = getConfig("server:port")
-const domain = getConfig("server:host")
+const port = fetchConfig("server:port")
+const domain = fetchConfig("server:host")
 
 app.use(compression())
 app.use(cookieParser())

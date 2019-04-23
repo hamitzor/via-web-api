@@ -41,7 +41,7 @@ class Logger {
 
 
   info = (message) => {
-    !this._supress && this._log(message)
+    !this._supress && this._log(`INFO - ${message}`)
   }
 
   error = (errorObject) => {

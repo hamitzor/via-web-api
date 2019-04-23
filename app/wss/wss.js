@@ -3,7 +3,7 @@
  */
 
 import Logger from "../util/logger"
-import getConfig from "../util/config-fetcher"
+import fetchConfig from "../util/config-fetcher"
 import WebSocket from "ws"
 import WSSRouter from "./wss-router"
 import codes from "../util/status-codes"
@@ -11,7 +11,7 @@ import codes from "../util/status-codes"
 class WSS extends WebSocket.Server {
   constructor({ server, operationEE }) {
     super({ server })
-    this._logger = new Logger(getConfig("logging:directory:wss"), !getConfig("logging:enabled"))
+    this._logger = new Logger(fetchConfig("logging:directory:wss"), !fetchConfig("logging:enabled"))
     this._router = new WSSRouter()
     this._operationEE = operationEE
   }

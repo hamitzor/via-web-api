@@ -2,13 +2,13 @@
  * @author thenrerise@gmail.com (Hamit Zor)
  */
 
-import getConfig from "../app/util/config-fetcher"
+import fetchConfig from "../app/util/config-fetcher"
 import hljs from "highlightjs"
 import codes from "../app/util/status-codes"
 
 
 
-const WSURL = `ws:${getConfig("server:host").replace("http://", "")}:${getConfig("server:port")}`
+const WSURL = `ws:${fetchConfig("server:host").replace("http://", "")}:${fetchConfig("server:port")}`
 
 
 
@@ -40,7 +40,7 @@ const QBETest = () => {
 
   let results = []
 
-  QBE.endPoint.value = `${getConfig("server:host")}:${getConfig("server:port")}`
+  QBE.endPoint.value = `${fetchConfig("server:host")}:${fetchConfig("server:port")}`
 
   QBE.submit.onclick = async () => {
 

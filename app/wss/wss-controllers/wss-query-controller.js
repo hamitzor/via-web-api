@@ -2,7 +2,7 @@
  * @author thenrerise@gmail.com (Hamit Zor)
  */
 
-import getConfig from "../../util/config-fetcher"
+import fetchConfig from "../../util/config-fetcher"
 import { spawn } from "child_process"
 import WSSController from "./wss-controller"
 import codes from "../../util/status-codes"
@@ -17,13 +17,13 @@ class WSSQueryController extends WSSController {
     this._CLIArgsToList = new CLIArgsToList({
       commonArgs: {
         "api": true,
-        "db-host": getConfig("database:host"),
-        "db-username": getConfig("database:username"),
-        "db-password": getConfig("database:password"),
-        "db-name": getConfig("database:name"),
+        "db-host": fetchConfig("database:host"),
+        "db-username": fetchConfig("database:username"),
+        "db-password": fetchConfig("database:password"),
+        "db-name": fetchConfig("database:name"),
         "websocket": true,
-        "ws-host": getConfig("server:host").replace("http://", "").replace("https://", ""),
-        "ws-port": getConfig("server:port")
+        "ws-host": fetchConfig("server:host").replace("http://", "").replace("https://", ""),
+        "ws-port": fetchConfig("server:port")
       }
     })
   }
@@ -60,7 +60,7 @@ class WSSQueryController extends WSSController {
 
       const argsList = ["-m", "src.main_scripts.qbe", videoId, imagePath, ...optionalArgsList]
 
-      const env = { PYTHONPATH: getConfig("module-path:qbe") }
+      const env = { PYTHONPATH: fetchConfig("module-path:qbe") }
 
       const process = spawn("python", argsList, { env })
 
