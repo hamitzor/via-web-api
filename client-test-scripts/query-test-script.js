@@ -9,14 +9,12 @@ import codes from "../app/util/status-codes"
 
 
 const WSURL = `ws:${fetchConfig("server:host").replace("http://", "")}:${fetchConfig("server:port")}`
-
+const endPoint = `${fetchConfig("server:host")}:${fetchConfig("server:port")}`
 
 
 const QBETest = () => {
   const QBE = {
-    endPoint: document.getElementById("qbe-end-point"),
     videoId: document.getElementById("qbe-video-id"),
-    userId: document.getElementById("qbe-user-id"),
     example: document.getElementById("qbe-example"),
     submit: document.getElementById("qbe-submit"),
     terminate: document.getElementById("qbe-terminate"),
@@ -40,13 +38,10 @@ const QBETest = () => {
 
   let results = []
 
-  QBE.endPoint.value = `${fetchConfig("server:host")}:${fetchConfig("server:port")}`
 
   QBE.submit.onclick = async () => {
 
     results = []
-
-    const endPoint = QBE.endPoint.value
 
     const reader = new FileReader()
 
@@ -60,7 +55,6 @@ const QBETest = () => {
         startWS.send(JSON.stringify({
           route: "start-qbe",
           data: {
-            userId: parseInt(QBE.userId.value),
             videoId: parseInt(QBE.videoId.value),
             encodedImage: reader.result,
             min: QBE.min.value ? parseFloat(QBE.min.value) : undefined,
@@ -76,7 +70,7 @@ const QBETest = () => {
 
 
         QBE.terminate.onclick = async () => {
-          await (await fetch(`${endPoint}/query/terminate-qbe?operationId=${startM.data.operationId}`)).json()
+          await (await fetch(`${endPoint}/query/terminate-operation/${startM.data.operationId}`)).json()
         }
 
         const startStatus = startM.status
@@ -136,6 +130,82 @@ const QBETest = () => {
   }
 }
 
+const EQFTest = () => {
+  const EQF = {
+    videoId: document.getElementById("eqf-video-id"),
+    submit: document.getElementById("eqf-submit"),
+    terminate: document.getElementById("eqf-terminate"),
+    message: document.getElementById("eqf-message"),
+    result: document.getElementById("eqf-result")
+  }
+
+  const setEQFResult = (result) => {
+    EQF.result.innerHTML = JSON.stringify(result, null, "   ")
+    hljs.highlightBlock(EQF.result)
+  }
+
+  const setEQFMessage = (message) => {
+    EQF.message.innerHTML = message
+  }
+
+  EQF.submit.onclick = async () => {
+    let watchWS = undefined
+
+    const startM = await (await fetch(`${endPoint}/query/start-eqf/${EQF.videoId.value}`)).json()
+
+    EQF.terminate.onclick = async () => {
+      await (await fetch(`${endPoint}/query/terminate-operation/${startM.data.operationId}`)).json()
+    }
+
+    const startStatus = startM.status
+    /* eslint-disable */
+    switch (startStatus) {
+      case codes.INTERNAL_SERVER_ERROR:
+        console.log(startM)
+        break;
+      case codes.COMPLETED_SUCCESSFULLY:
+        setEQFMessage("Completed")
+        break;
+      case codes.OK:
+        watchWS && watchWS.close()
+
+        watchWS = new WebSocket(WSURL)
+
+        watchWS.onopen = function () {
+          watchWS.send(JSON.stringify({
+            route: "watch-operation",
+            data: { operationId: startM.data.operationId }
+          }))
+        }
+
+        watchWS.onmessage = async function (evt) {
+
+          const watchM = JSON.parse(evt.data)
+          const watchStatus = watchM.status
+          setEQFResult(watchM)
+          switch (watchStatus) {
+            case codes.PROGRESS:
+              setEQFResult({ progress: watchM.data.progress })
+              break;
+            default:
+              console.log(watchM)
+          }
+        }
+        watchWS.onclose = function () {
+          setEQFMessage("Watch Connection is closed")
+        }
+        break;
+      default:
+        console.log(startM)
+        break;
+    }
+    /* eslint-enable */
+
+  }
+}
+
+
 document.addEventListener("DOMContentLoaded", () => {
   QBETest()
+  EQFTest()
 })

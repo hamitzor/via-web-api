@@ -22,6 +22,15 @@ class VideoModel {
     return db.execute(sql, [videoId])
   }
 
+  updateById = (videoId, video) => {
+    const columns = Object.keys(video)
+    const values = columns.reduce((acc, column) => [...acc, video[column]], [])
+
+    const sql = `UPDATE videos SET ${columns.join("= ? , ")} = ? WHERE video_id = ?`
+
+    return db.execute(sql, [...values, videoId])
+  }
+
   save = (video) => {
     const columns = Object.keys(video)
     const valuePlaceholders = Array(columns.length).fill("?")

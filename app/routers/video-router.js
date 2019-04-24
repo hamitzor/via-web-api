@@ -3,31 +3,18 @@
  */
 
 import express from "express"
-import * as videoControllers from "../controllers/video-controller"
-import multer from "multer"
-import path from "path"
+import videoController from "../controllers/video-controller"
 
-var storage = multer.diskStorage({
-  destination: function(req, file, cb) {
-    cb(null, path.join(__dirname, "/../../media-source/video"))
-  },
-  filename: function(req, file, cb) {
-    const index = file.originalname.indexOf(".")
-    const fileExtension = file.originalname.substring(index)
-    cb(null, file.fieldname + "-" + Date.now() + fileExtension)
-  }
-})
+const videoRouter = express.Router()
 
-var upload = multer({ storage: storage })
 
-const router = express.Router()
+videoRouter.get("/", videoController.getVideos)
 
-router.get("/", videoControllers.getVideos)
+videoRouter.get("/:videoId", videoController.getVideo)
 
-router.get("/:videoId", videoControllers.getVideo)
+videoRouter.delete("/:videoId", videoController.deleteVideo)
 
-router.post("/upload", upload.single("video"), videoControllers.postVideo)
+videoRouter.post("/", videoController.postVideo)
 
-router.delete("/:videoId", videoControllers.deleteVideo)
 
-export default router
+export default videoRouter

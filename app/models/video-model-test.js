@@ -1,9 +1,9 @@
-import VideoModel from "./video-model"
+import videoModel from "./video-model"
 
 
 const test = async () => {
 
-  const saveInfo = (await VideoModel.save({
+  const saveInfo = (await videoModel.save({
     title: "Test Video",
     length: 123,
     extension: ".mp4",
@@ -17,17 +17,19 @@ const test = async () => {
     eqf_status: 0
   }))[0]
 
-  console.log(saveInfo)
+  const insertId = saveInfo.insertId
 
-  const insertedId = saveInfo.insertId
+  console.log((await videoModel.fetchById(insertId))[0])
 
-  console.log((await VideoModel.fetchById(insertedId))[0])
+  const updateInfo = (await videoModel.updateById(insertId, {
+    title: "Updated Video",
+    eqf_status: 1
+  }))[0]
 
-  const deleteInfo = (await VideoModel.deleteById(insertedId))[0]
+  console.log(updateInfo)
 
-  console.log(deleteInfo)
+  console.log((await videoModel.fetchById(insertId))[0])
 
-  console.log((await VideoModel.fetchAll())[0])
 
   process.exit()
 }

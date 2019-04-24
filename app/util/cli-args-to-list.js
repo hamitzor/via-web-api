@@ -4,11 +4,16 @@
 
 
 class CLIArgsToList {
-  constructor({ commonArgs }) {
-    this._commonArgs = commonArgs ? commonArgs : {}
+  constructor(options) {
+    if (options) {
+      this._commonArgs = options.commonArgs ? options.commonArgs : {}
+    }
+    else {
+      this._commonArgs = {}
+    }
   }
 
-  convert = (args) => {
+  convert = (args = {}) => {
     args = { ...this._commonArgs, ...args }
 
     return Object.keys(args).reduce((acc, argName) => {

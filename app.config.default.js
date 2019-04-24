@@ -14,5 +14,7 @@ module.exports = {
   "logging:enabled": true,
   "logging:directory:query": "/var/log",
   "logging:directory:wss": "/var/log",
+  "logging:directory:video": "/var/log",
+  "upload-directory:video": "",
   "temporary-directory": "/tmp"
 }

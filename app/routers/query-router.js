@@ -7,7 +7,7 @@ import queryController from "../controllers/query-controller"
 
 const queryRouter = express.Router()
 
-queryRouter.get("/terminate-qbe", queryController.terminateQBE)
-queryRouter.get("/start-eqf", queryController.startEQF)
+queryRouter.get("/terminate-operation/:operationId", queryController.terminateOperation)
+queryRouter.get("/start-eqf/:videoId", queryController.startEQF)
 
 export default queryRouter

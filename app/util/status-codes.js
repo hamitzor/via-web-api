@@ -10,4 +10,5 @@ export default {
   PROGRESS: 4,
   BAD_REQUEST: 5,
   OK: 6,
+  NOT_FOUND: 7
 }

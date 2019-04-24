@@ -15,25 +15,20 @@ import operationEE from "../../event-emmiters/operation-ee"
 class WSSQueryController extends WSSController {
   constructor() {
     super()
-    this._CLIArgsToList = new CLIArgsToList({
+    this._cliArgsToList = new CLIArgsToList({
       commonArgs: {
-        "api": true,
         "db-host": fetchConfig("database:host"),
         "db-username": fetchConfig("database:username"),
         "db-password": fetchConfig("database:password"),
-        "db-name": fetchConfig("database:name"),
-        "websocket": true,
-        "ws-host": fetchConfig("server:host").replace("http://", "").replace("https://", ""),
-        "ws-port": fetchConfig("server:port")
+        "db-name": fetchConfig("database:name")
       }
     })
   }
 
-  startQBE = async ({ userId, videoId, encodedImage, min, begin, end }, ws) => {
+  startQBE = async ({ videoId, encodedImage, min, begin, end }, ws) => {
     try {
       /*Validation*/
       try {
-        if (!Number.isInteger(userId)) { throw new Error("Invalid userId") }
         if (!Number.isInteger(videoId)) { throw new Error("Invalid videoId") }
         if (!isString(encodedImage)) { throw new Error("Invalid encodedImage") }
         if (!isUndefined(min) && !isFloat(min)) { throw new Error("Invalid min") }
@@ -52,12 +47,10 @@ class WSSQueryController extends WSSController {
       const optionalArgs = {
         "min": min,
         "begin": begin,
-        "end": end,
-        "ws-route": "progress-operation",
-        "operation-id": operationId
+        "end": end
       }
 
-      const optionalArgsList = this._CLIArgsToList.convert(optionalArgs)
+      const optionalArgsList = this._cliArgsToList.convert(optionalArgs)
 
       const argsList = ["-m", "packages.main_scripts.qbe", videoId, imagePath, ...optionalArgsList]
 
@@ -65,41 +58,47 @@ class WSSQueryController extends WSSController {
 
       const process = spawn("python", argsList, { env })
 
+      ws.on("close", () => {
+        process.kill()
+        this._sendAndClose(ws, codes.TERMINATED_BY_USER)
+      })
+
+      operationEE.onTerminate(operationId, () => {
+        process.kill()
+        operationEE.didTerminate(operationId)
+        this._sendAndClose(ws, codes.TERMINATED_BY_USER)
+      })
+
       this._send(ws, codes.OK, { operationId })
+
+      process.stdout.on("data", async (data) => {
+        try {
+          const parsedData = JSON.parse(data.toString())
+          operationEE.progress(operationId, { progress: parsedData.progress, results: parsedData.results })
+        } catch (err) {
+          this._logger.error(err)
+        }
+      })
+
+      process.stderr.on("data", (data) => {
+        process.kill()
+        this._sendAndClose(ws, codes.INTERNAL_SERVER_ERROR)
+        this._logger.error(new Error(data.toString()))
+      })
 
       process.on("exit", async (code) => {
         try {
-          /* eslint-disable */
-          switch (code) {
-            case codes.INTERNAL_SERVER_ERROR:
-              this._sendAndClose(ws, codes.INTERNAL_SERVER_ERROR)
-              break
-            case codes.TERMINATED_BY_USER:
-              this._sendAndClose(ws, codes.TERMINATED_BY_USER)
-              break
-            case codes.COMPLETED_SUCCESSFULLY:
-              this._sendAndClose(ws, codes.COMPLETED_SUCCESSFULLY)
-              break
-            default:
-              this._sendAndClose(ws, codes.INTERNAL_SERVER_ERROR)
+          if (code === codes.COMPLETED_SUCCESSFULLY) {
+            this._sendAndClose(ws, codes.COMPLETED_SUCCESSFULLY)
           }
-          /* eslint-enable */
+          else {
+            this._sendAndClose(ws, codes.INTERNAL_SERVER_ERROR)
+          }
         }
         catch (err) {
           this._sendAndClose(ws, codes.INTERNAL_SERVER_ERROR)
           this._logger.error(err)
         }
-      })
-
-      operationEE.onTerminate(operationId, () => {
-        process.kill("SIGUSR1")
-        operationEE.didTerminate(operationId)
-      })
-
-      ws.on("close", () => {
-        setTimeout(() => {
-          process.kill("SIGUSR1")
-        }, 1000)
       })
     }
     catch (err) {
@@ -126,26 +125,6 @@ class WSSQueryController extends WSSController {
     } catch (err) {
       this._logger.error(err)
       this._sendAndClose(ws, codes.INTERNAL_SERVER_ERROR)
-    }
-  }
-
-  progressOperation = ({ operationId, progress, results }, ws) => {
-    /*Validation*/
-    try {
-      if (!isString(operationId)) { throw new Error("Invalid operationId") }
-      operationId = operationId.trim()
-      if (operationId.length !== 16) { throw new Error("Invalid operationId") }
-      if (!isUndefined(progress) && !Number.isInteger(progress)) { throw new Error("Invalid progress") }
-    } catch (err) {
-      this._sendAndClose(ws, codes.BAD_REQUEST, { message: err.message })
-      return
-    }
-    /*Validation*/
-    try {
-      operationEE.progress(operationId, { progress, results })
-    } catch (err) {
-      this._logger.error(err)
-      ws.close()
     }
   }
 }

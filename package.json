@@ -6,7 +6,7 @@
     "watch": "webpack --mode development --progress --watch",
     "build": "webpack --mode development --progress --profile",
     "release": "webpack --mode production --progress --profile",
-    "test":"yarn run babel-node --presets @babel/preset-env"
+    "test": "yarn run babel-node --presets @babel/preset-env"
   },
   "repository": "https://github.com/hamit-zor/via-web-api",
   "author": "Hamit Zor <thenrerise@gmail.com>",

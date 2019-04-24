@@ -46,17 +46,13 @@
 
 <body>
   <h1>VIA API - Query - Test</h1>
+
   <div id="root">
     <div id="qbe-root">
       <h2>QBE Test</h2>
-      <label for="qbe-end-point">Endpoint url:</label><br />
-      <input name="end-point" id="qbe-end-point"><br /><br />
 
       <label for="qbe-video-id">Video ID:</label><br />
       <input name="videoId" id="qbe-video-id" type="number" value="1"><br /><br />
-
-      <label for="qbe-user-id">User ID:</label><br />
-      <input name="userId" id="qbe-user-id" type="number" value="1"><br /><br />
 
       <label for="qbe-example">Example image file:</label><br />
       <input name="exampleFile" id="qbe-example" type="file"><br /><br />
@@ -75,6 +71,18 @@
 
       <h4 id="qbe-message"></h4>
       <pre><code id="qbe-result"></code></pre>
+    </div>
+
+    <div id="eqf-root">
+      <h2>EQF Test</h2>
+      <label for="eqf-video-id">Video ID:</label><br />
+      <input name="videoId" id="eqf-video-id" type="number" value="1"><br /><br />
+
+      <button id="eqf-submit">START</button>
+      <button id="eqf-terminate">TERMINATE</button>
+
+      <h4 id="eqf-message"></h4>
+      <pre><code id="eqf-result"></code></pre>
     </div>
   </div>
   <script src="/query-test-script-bundle.js"></script>
