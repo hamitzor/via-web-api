@@ -99,9 +99,6 @@ const anomalyTest = () => {
               setanomalyResult(watchM)
               switch (watchStatus) {
                 case codes.PROGRESS:
-                  if (watchM.data.results.length) {
-                    results.push(...watchM.data.results)
-                  }
                   setanomalyResult({ progress: watchM.data.progress, results: results })
                   break;
                 default:

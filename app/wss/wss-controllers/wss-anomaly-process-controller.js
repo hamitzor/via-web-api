@@ -1,5 +1,5 @@
 /**
- * @author thenrerise@gmail.com (Hamit Zor)
+ * @author umutguler97@gmail.com (Göksen Umut Güler)
  */
 
 import fetchConfig from "../../util/config-fetcher"
@@ -13,6 +13,57 @@ import anomalyEventEmitter from "../../event-emmiters/anomaly-event-emitter"
 class WSSAnomalyController extends WSSController {
   constructor() {
     super()
+  }
+  startAnomalyProcess = async ({ videoId }, ws) => {
+  
+    const operationId = crypto.randomBytes(8).toString("hex")
+  
+    const argsList = ["process_activity.py",videoId]
+    
+    const cwd = fetchConfig("module-path:activity_detection")
+
+    try {
+    const process = spawn("python3", argsList, { cwd })
+ 
+    ws.on("close", () => {
+      process.kill()
+      this._sendAndClose(ws, codes.TERMINATED_BY_USER)
+    })
+
+    anomalyEventEmitter.onTerminate(operationId, () => {
+      process.kill()
+      anomalyEventEmitter.didTerminate(operationId)
+    })
+    
+    this._send(ws, codes.OK, { operationId })
+  
+    process.stdout.on("data", async (data) => {
+      try {
+        const parsedData = JSON.parse(data.toString())
+        anomalyEventEmitter.progress(operationId, { progress: parsedData.progress })
+      } catch (err) {
+        this._logger.error(err)
+      }
+    })
+    
+    process.stderr.on("data", (data) => {
+      process.kill()
+      this._logger.error(new Error(data.toString()))
+    })
+    
+    process.on("exit", async (code) => {
+      if (code === codes.COMPLETED_SUCCESSFULLY) {
+        
+        this._logger.info("Activity Detection operation has successfully completed for video with videoId " + videoId)
+      }
+      else {
+        
+        this._logger.error(new Error("Activity Detection operation has failed for video with videoId " + videoId))
+      }
+    })
+  }catch(err){
+   console.error(err)
+  }
   }
 
   startLineCrossing = async ({ videoId, line_coord1_x, line_coord1_y, line_coord2_x, line_coord2_y }, ws) => {
@@ -49,17 +100,22 @@ class WSSAnomalyController extends WSSController {
     
     process.stderr.on("data", (data) => {
       process.kill()
+      this._sendAndClose(ws, codes.INTERNAL_SERVER_ERROR)
       this._logger.error(new Error(data.toString()))
     })
     
     process.on("exit", async (code) => {
-      if (code === codes.COMPLETED_SUCCESSFULLY) {
-        
-        this._logger.info("Line Crossing Detection operation has successfully completed for video with videoId " + videoId)
+      try {
+        if (code === codes.COMPLETED_SUCCESSFULLY) {
+          this._sendAndClose(ws, codes.COMPLETED_SUCCESSFULLY)
+        }
+        else {
+          this._sendAndClose(ws, codes.INTERNAL_SERVER_ERROR)
+        }
       }
-      else {
-        
-        this._logger.error(new Error("Line Crossing Detection operation has failed for video with videoId " + videoId))
+      catch (err) {
+        this._sendAndClose(ws, codes.INTERNAL_SERVER_ERROR)
+        this._logger.error(err)
       }
     })
   }catch(err){
