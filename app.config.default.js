@@ -1,5 +1,6 @@
 /**
  * @author thenrerise@gmail.com (Hamit Zor)
+ * @author umutguler97@gmail.com (Göksen Umut GÜLER)
  */
 
 module.exports = {
@@ -9,6 +10,7 @@ module.exports = {
   "database:username": "",
   "database:password": "",
   "database:name": "via",
+  "module-path:line_crossing": "",
   "module-path:qbe": "",
   "module-path:helper": "",
   "logging:enabled": true,

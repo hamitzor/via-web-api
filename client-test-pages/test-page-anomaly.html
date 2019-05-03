@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <title>VIA API Test Page</title>
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/default.min.css">
+  <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+  <style>
+    *:not(h1):not(h2) {
+      font-size: 16px;
+    }
+
+    * {
+      font-family: Roboto
+    }
+
+    pre {
+      display: inline-block;
+    }
+
+    input {
+      width: 90%
+    }
+
+    #anomaly-result,
+    #anomaly-result * {
+      font-family: monospace
+    }
+
+    #efs-result,
+    #efs-result * {
+      font-family: monospace
+    }
+
+    #root {
+      display: flex
+    }
+
+    #anomaly-root,
+    #eqf-root {
+      width: 500px
+    }
+  </style>
+</head>
+
+<body>
+  <h1>VIA API - Query - Test</h1>
+
+  <div id="root">
+    <div id="anomaly-root">
+      <h2>anomaly Test</h2>
+
+      <label for="anomaly-video-id">Video ID:</label><br />
+      <input name="videoId" id="anomaly-video-id" type="number" value="1"><br /><br />
+
+      <label for="anomaly-x1">x1:</label><br />
+      <input name="anomaly-x1" id="anomaly-x1" type="number" value="1"><br /><br />
+      <label for="anomaly-y1">y1:</label><br />
+      <input name="anomaly-y1" id="anomaly-y1" type="number" value="1"><br /><br />
+      <label for="anomaly-x2">x2:</label><br />
+      <input name="anomaly-x2" id="anomaly-x2" type="number" value="1"><br /><br />
+      <label for="anomaly-y2">y2:</label><br />
+      <input name="anomaly-y2" id="anomaly-y2" type="number" value="1"><br /><br />
+
+      <button id="anomaly-submit">START</button>
+      <button id="anomaly-terminate">TERMINATE</button>
+
+      <h4 id="anomaly-message"></h4>
+      <pre><code id="anomaly-result"></code></pre>
+    </div>
+  </div>
+  <script src="/anomaly-test-script-bundle.js"></script>
+</body>
+
+</html>

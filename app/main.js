@@ -1,6 +1,7 @@
 /**
  * @author thenrerise@gmail.com (Hamit Zor)
  * @author kgnugur@gmail.com (Kagan Ugur)
+ * @author umutguler97@gmail.com (Göksen Umut Güler)
  */
 
 import "@babel/polyfill"
@@ -40,6 +41,7 @@ app.use("/video", urlencoded({ extended: true }), videoRouter)
 app.use("/query", queryRouter)
 
 app.use("/anomaly", anomalyRouter)
+
 
 server.listen(port, () => {
   console.log(`Application is online at ${domain}:${port}`)
