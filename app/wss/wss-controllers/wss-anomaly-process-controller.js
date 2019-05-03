@@ -22,9 +22,9 @@ class WSSAnomalyController extends WSSController {
     const argsList = ["intersect_demo.py",videoId, line_coord1_x, line_coord1_y, line_coord2_x, line_coord2_y]
     
     const cwd = fetchConfig("module-path:line_crossing")
-    const env = { PYTHONPATH: fetchConfig("module-path:line_crossing") }
+
     try {
-    const process = spawn("python", argsList, { cwd , env})
+    const process = spawn("python3", argsList, { cwd })
  
     ws.on("close", () => {
       process.kill()
