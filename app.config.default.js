@@ -11,6 +11,7 @@ module.exports = {
   "database:password": "",
   "database:name": "via",
   "module-path:line_crossing": "",
+  "module-path:activity_detection": "",
   "module-path:qbe": "",
   "module-path:helper": "",
   "logging:enabled": true,
