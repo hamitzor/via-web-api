@@ -1,5 +1,5 @@
 /**
- * @author thenrerise@gmail.com (Hamit Zor)
+ * @author umutguler97@gmail.com(Göksen Umut GÜLER)
  */
 
 import fetchConfig from "../app/util/config-fetcher"
