@@ -24,7 +24,7 @@ class WSSAnomalyController extends WSSController {
     const cwd = fetchConfig("module-path:line_crossing")
     const env = { PYTHONPATH: fetchConfig("module-path:line_crossing") }
     try {
-    const process = spawn("python3", argsList, { cwd , env})
+    const process = spawn("python", argsList, { cwd , env})
  
     ws.on("close", () => {
       process.kill()
@@ -43,23 +43,23 @@ class WSSAnomalyController extends WSSController {
         const parsedData = JSON.parse(data.toString())
         anomalyEventEmitter.progress(operationId, { progress: parsedData.progress })
       } catch (err) {
-        _logger.error(err)
+        this._logger.error(err)
       }
     })
     
     process.stderr.on("data", (data) => {
       process.kill()
-      _logger.error(new Error(data.toString()))
+      this._logger.error(new Error(data.toString()))
     })
     
     process.on("exit", async (code) => {
       if (code === codes.COMPLETED_SUCCESSFULLY) {
         
-        _logger.info("Line Crossing Detection operation has successfully completed for video with videoId " + videoId)
+        this._logger.info("Line Crossing Detection operation has successfully completed for video with videoId " + videoId)
       }
       else {
         
-        _logger.error(new Error("Line Crossing Detection operation has failed for video with videoId " + videoId))
+        this._logger.error(new Error("Line Crossing Detection operation has failed for video with videoId " + videoId))
       }
     })
   }catch(err){

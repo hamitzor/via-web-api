@@ -12,6 +12,7 @@ dist/
 build/
 yarn.lock
 .vscode
+.package-lock.json
 
 # Dependency directories
 node_modules/
