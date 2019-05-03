@@ -1,5 +1,6 @@
 /**
  * @author thenrerise@gmail.com (Hamit Zor)
+ * @author umutguler97@gmail.com (Göksen Umut Güler)
  */
 
 import wssQueryController from "./wss-controllers/wss-query-controller"
