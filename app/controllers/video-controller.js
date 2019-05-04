@@ -156,7 +156,9 @@ class VideoController extends Controller {
               this._send(res, codes.INTERNAL_SERVER_ERROR)
             }
           })
-
+          /*
+              Add Anomaly Request on Exit
+          */
           process.stderr.on("data", (data) => {
             this._send(res, codes.INTERNAL_SERVER_ERROR)
             this._logger.error(new Error(data.toString()))
