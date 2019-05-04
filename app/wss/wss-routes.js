@@ -12,7 +12,7 @@ const routes = {
   "progress-operation": wssQueryController.progressOperation,
   "start-anomaly" : wssAnomalyController.startLineCrossing,
   "anomaly-watch-operation" : wssAnomalyController.watchOperation,
-
+  "start-anomaly-activity" : wssAnomalyController.startAnomalyProcess,
 }
 
 
