@@ -10,6 +10,6 @@ const router = express.Router()
 
 
 router.get("/:videoId", anomalyController.getAnomaliesByVideo)
-
+router.get("/linecrossing/:videoId", anomalyController.getLineCrossingDetectionByVideo)
 
 export default router
