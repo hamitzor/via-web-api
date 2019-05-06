@@ -1,6 +1,6 @@
 /**
- * @author umutguler97@gmail.com(Göksen Umut GÜLER)
- */
+* @author umutguler97@gmail.com(Göksen Umut GÜLER)
+*/
 
 import fetchConfig from "../app/util/config-fetcher"
 import hljs from "highlightjs"
@@ -24,102 +24,102 @@ const anomalyTest = () => {
     message: document.getElementById("anomaly-message"),
     result: document.getElementById("anomaly-result"),
   }
-
+  
   const setanomalyResult = (result) => {
     anomaly.result.innerHTML = JSON.stringify(result, null, "   ")
     hljs.highlightBlock(anomaly.result)
   }
-
+  
   const setanomalyMessage = (message) => {
     anomaly.message.innerHTML = message
   }
-
+  
   let startWS = undefined
-
+  
   let results = []
-
-
+  
+  
   anomaly.submit.onclick = async () => {
-
+    
     results = []
-
     
-
-      startWS && startWS.close()
-
-      startWS = new WebSocket(WSURL)
-
-      startWS.onopen = function () {
-        startWS.send(JSON.stringify({
-          route: "start-anomaly",
-          data: {
-            videoId: parseInt(anomaly.videoId.value),
-            line_coord1_x: anomaly.line_coord1_x.value ? parseFloat(anomaly.line_coord1_x.value) : undefined,
-            line_coord1_y: anomaly.line_coord1_y.value ? parseFloat(anomaly.line_coord1_x.value) : undefined,
-            line_coord2_x: anomaly.line_coord2_x.value ? parseInt(anomaly.line_coord1_x.value) : undefined,
-            line_coord2_y: anomaly.line_coord2_y.value ? parseInt(anomaly.line_coord2_y.value) : undefined,
+    
+    
+    startWS && startWS.close()
+    
+    startWS = new WebSocket(WSURL)
+    
+    startWS.onopen = function () {
+      startWS.send(JSON.stringify({
+        route: "start-anomaly",
+        data: {
+          videoId: parseInt(anomaly.videoId.value),
+          line_coord1_x: anomaly.line_coord1_x.value ? parseFloat(anomaly.line_coord1_x.value) : undefined,
+          line_coord1_y: anomaly.line_coord1_y.value ? parseFloat(anomaly.line_coord1_x.value) : undefined,
+          line_coord2_x: anomaly.line_coord2_x.value ? parseInt(anomaly.line_coord1_x.value) : undefined,
+          line_coord2_y: anomaly.line_coord2_y.value ? parseInt(anomaly.line_coord2_y.value) : undefined,
+        }
+      }))
+    }
+    
+    startWS.onmessage = function (evt) {
+      let watchWS = undefined
+      const startM = JSON.parse(evt.data)
+      console.log(evt.data)
+      
+      anomaly.terminate.onclick = async () => {
+        await (await fetch(`${endPoint}/query/terminate-operation/${startM.data.operationId}`)).json()
+      }
+      
+      const startStatus = startM.status
+      /* eslint-disable */
+      switch (startStatus) {
+        case codes.INTERNAL_SERVER_ERROR:
+        console.log(startM)
+        break;
+        case codes.COMPLETED_SUCCESSFULLY:
+        setanomalyMessage("Completed")
+        break;
+        case codes.OK:
+        watchWS && watchWS.close()
+        
+        watchWS = new WebSocket(WSURL)
+        
+        watchWS.onopen = function () {
+          watchWS.send(JSON.stringify({
+            route: "anomaly-watch-operation",
+            data: { operationId: startM.data.operationId }
+          }))
+        }
+        
+        watchWS.onmessage = async function (evt) {
+          console.log(evt.data)
+          const watchM = JSON.parse(evt.data)
+          const watchStatus = watchM.status
+          setanomalyResult(watchM)
+          switch (watchStatus) {
+            case codes.PROGRESS:
+            setanomalyResult({ progress: watchM.data.progress, results: results })
+            break;
+            default:
+            console.log(watchM)
           }
-        }))
-      }
-
-      startWS.onmessage = function (evt) {
-        let watchWS = undefined
-        const startM = JSON.parse(evt.data)
-
-
-        anomaly.terminate.onclick = async () => {
-          await (await fetch(`${endPoint}/query/terminate-operation/${startM.data.operationId}`)).json()
         }
-
-        const startStatus = startM.status
-        /* eslint-disable */
-        switch (startStatus) {
-          case codes.INTERNAL_SERVER_ERROR:
-            console.log(startM)
-            break;
-          case codes.COMPLETED_SUCCESSFULLY:
-            setanomalyMessage("Completed")
-            break;
-          case codes.OK:
-            watchWS && watchWS.close()
-
-            watchWS = new WebSocket(WSURL)
-
-            watchWS.onopen = function () {
-              watchWS.send(JSON.stringify({
-                route: "anomaly-watch-operation",
-                data: { operationId: startM.data.operationId }
-              }))
-            }
-
-            watchWS.onmessage = async function (evt) {
-
-              const watchM = JSON.parse(evt.data)
-              const watchStatus = watchM.status
-              setanomalyResult(watchM)
-              switch (watchStatus) {
-                case codes.PROGRESS:
-                  setanomalyResult({ progress: watchM.data.progress, results: results })
-                  break;
-                default:
-                  console.log(watchM)
-              }
-            }
-            watchWS.onclose = function () {
-              setanomalyMessage("Watch Connection is closed")
-            }
-            break;
-          default:
-            console.log(startM)
-            break;
+        watchWS.onclose = function () {
+          setanomalyMessage("Watch Connection is closed")
         }
-        /* eslint-enable */
+        break;
+        default:
+        console.log(startM)
+        break;
       }
-      startWS.onclose = function () {
-        setanomalyMessage("Start Connection is closed")
-      }
+      /* eslint-enable */
+    }
+    startWS.onclose = function () {
+      setanomalyMessage("Start Connection is closed")
+    }
     
-
+    
   }
 }
 
@@ -128,3 +128,4 @@ const anomalyTest = () => {
 document.addEventListener("DOMContentLoaded", () => {
   anomalyTest()
 })
+
