@@ -28,6 +28,11 @@ class TestController {
       path.resolve(__dirname, "../client-test-pages/test-page-upload-file.html")
     )
   }
+  objectTest = (req, res) => {
+    res.sendFile(
+      path.resolve(__dirname, "../client-test-pages/test-page-object.html")
+    )
+  }
 }
 
 export default (new TestController)

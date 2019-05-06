@@ -2,9 +2,9 @@
  * @author doguhanbabuur@hotmail.com (Doğuhan Babur)
  */
 
-import ObjectDetectedModel from '../object-models/object-model';
+import ObjectDetectedModel from '../models/object-model';
 
-export const getDetectedObjectsByVideo = (req, res) => {
+export default  (req, res) => {
     const { videoId } = req.params;
     ObjectDetectedModel.fetchById(videoId)
         .then(([queryRows, queryFields]) => {

@@ -20,6 +20,8 @@ import queryRouter from "./routers/query-router"
 import homeRouter from "./routers/home-router"
 import testRouter from "./routers/test-router"
 import anomalyRouter from "./routers/anomaly-router"
+import objectRouter from "./routers/object-router"
+
 
 
 const port = fetchConfig("server:port")
@@ -41,6 +43,8 @@ app.use("/video", urlencoded({ extended: true }), videoRouter)
 app.use("/query", queryRouter)
 
 app.use("/anomaly", anomalyRouter)
+
+app.use("/object", objectRouter)
 
 
 server.listen(port, () => {

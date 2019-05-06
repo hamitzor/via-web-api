@@ -38,7 +38,22 @@ const anomalyTestScriptConfig = function (env, argv) {
       filename: "anomaly-test-script-bundle.js",
     }
   }
+
 }
+
+const objectTestScriptConfig = function (env, argv) {
+  const mode = argv.mode
+  return {
+    mode: mode,
+    ...clientCommonConfigs,
+    entry: "./object-test-script.js",
+    output: {
+      path: path.resolve(__dirname, "lib"),
+      filename: "object-test-script-bundle.js",
+    }
+  }
+}
+
 
 const serverConfig = function (env, argv) {
   const mode = argv.mode
@@ -65,4 +80,4 @@ const serverConfig = function (env, argv) {
 }
 
 
-module.exports = [queryTestScriptConfig,anomalyTestScriptConfig, serverConfig]
+module.exports = [queryTestScriptConfig,anomalyTestScriptConfig,objectTestScriptConfig, serverConfig]
