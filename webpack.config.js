@@ -40,7 +40,7 @@ const anomalyTestScriptConfig = function (env, argv) {
   }
 
 }
-const anomalyTestScriptConfig = function (env, argv) {
+const activityTestScriptConfig = function (env, argv) {
   const mode = argv.mode
   return {
     mode: mode,
