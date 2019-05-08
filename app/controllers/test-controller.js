@@ -22,7 +22,11 @@ class TestController {
       path.resolve(__dirname, "../client-test-pages/test-page-anomaly.html")
     )
   }
-
+  activityTest = (req, res) => {
+    res.sendFile(
+      path.resolve(__dirname, "../client-test-pages/test-page-anomaly-activity.html")
+    )
+  }
   fileUploadTest = (req, res) => {
     res.sendFile(
       path.resolve(__dirname, "../client-test-pages/test-page-upload-file.html")
