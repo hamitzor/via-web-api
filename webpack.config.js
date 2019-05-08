@@ -40,7 +40,19 @@ const anomalyTestScriptConfig = function (env, argv) {
   }
 
 }
+const anomalyTestScriptConfig = function (env, argv) {
+  const mode = argv.mode
+  return {
+    mode: mode,
+    ...clientCommonConfigs,
+    entry: "./anomaly-activity-test-script.js",
+    output: {
+      path: path.resolve(__dirname, "lib"),
+      filename: "anomaly-activity-test-script-bundle.js",
+    }
+  }
 
+}
 const objectTestScriptConfig = function (env, argv) {
   const mode = argv.mode
   return {
