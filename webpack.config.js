@@ -92,4 +92,4 @@ const serverConfig = function (env, argv) {
 }
 
 
-module.exports = [queryTestScriptConfig,anomalyTestScriptConfig,objectTestScriptConfig, serverConfig]
+module.exports = [queryTestScriptConfig,anomalyTestScriptConfig,objectTestScriptConfig, serverConfig, activityTestScriptConfig]
