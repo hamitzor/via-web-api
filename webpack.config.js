@@ -53,6 +53,19 @@ const activityTestScriptConfig = function (env, argv) {
   }
 
 }
+const crowdTestScriptConfig = function (env, argv) {
+  const mode = argv.mode
+  return {
+    mode: mode,
+    ...clientCommonConfigs,
+    entry: "./anomaly-crowd-test-script.js",
+    output: {
+      path: path.resolve(__dirname, "lib"),
+      filename: "anomaly-crowd-test-script-bundle.js",
+    }
+  }
+
+}
 const objectTestScriptConfig = function (env, argv) {
   const mode = argv.mode
   return {
@@ -92,4 +105,4 @@ const serverConfig = function (env, argv) {
 }
 
 
-module.exports = [queryTestScriptConfig,anomalyTestScriptConfig,objectTestScriptConfig, serverConfig, activityTestScriptConfig]
+module.exports = [queryTestScriptConfig,anomalyTestScriptConfig,objectTestScriptConfig, serverConfig, activityTestScriptConfig,crowdTestScriptConfig]

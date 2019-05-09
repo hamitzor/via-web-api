@@ -13,6 +13,7 @@ const routes = {
   "start-anomaly" : wssAnomalyController.startLineCrossing,
   "anomaly-watch-operation" : wssAnomalyController.watchOperation,
   "start-anomaly-activity" : wssAnomalyController.startAnomalyProcess,
+  "start-anomaly-crowd" : wssAnomalyController.startCrowdProcess,
 }
 
 

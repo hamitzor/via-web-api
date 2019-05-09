@@ -14,5 +14,6 @@ testRouter.get("/file-upload", testController.fileUploadTest)
 testRouter.get("/query-test", testController.queryTest)
 testRouter.get("/anomaly-test", testController.anomalyTest)
 testRouter.get("/anomaly-activity-test", testController.activityTest)
+testRouter.get("/anomaly-crowd-test", testController.crowdTest)
 testRouter.get("/object-test", testController.objectTest)
 export default testRouter

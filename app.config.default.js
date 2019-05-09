@@ -12,6 +12,7 @@ module.exports = {
   "database:name": "via",
   "module-path:line_crossing": "",
   "module-path:activity_detection": "",
+  "module-path:crowd_detection":"",
   "module-path:qbe": "",
   "module-path:helper": "",
   "logging:enabled": true,
