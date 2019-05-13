@@ -51,7 +51,7 @@ const anomalyTest = () => {
     
     startWS.onopen = function () {
       startWS.send(JSON.stringify({
-        route: "start-anomaly-activity",
+        route: "start-anomaly",
         data: {
           videoId: parseInt(anomaly.videoId.value),
           line_coord1_x: anomaly.line_coord1_x.value ? parseFloat(anomaly.line_coord1_x.value) : undefined,
