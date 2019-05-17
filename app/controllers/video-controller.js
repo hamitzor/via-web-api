@@ -140,7 +140,7 @@ class VideoController extends Controller {
                 frame_count: metaData.frame_count,
                 width: metaData.width,
                 height: metaData.height,
-                tumbnail: metaData.tumbnail,
+                tumbnail: `tumbnail/${metaData.tumbnail}`,
                 eqf_status: eqfStatusCodes.NOT_STARTED
               }
 
