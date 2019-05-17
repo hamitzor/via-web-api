@@ -55,7 +55,7 @@ const anomalyTest = () => {
         data: {
           videoId: parseInt(anomaly.videoId.value),
           line_coord1_x: anomaly.line_coord1_x.value ? parseFloat(anomaly.line_coord1_x.value) : undefined,
-          line_coord1_y: anomaly.line_coord1_y.value ? parseFloat(anomaly.line_coord1_x.value) : undefined,
+          line_coord1_y: anomaly.line_coord1_y.value ? parseFloat(anomaly.line_coord1_y.value) : undefined,
           line_coord2_x: anomaly.line_coord2_x.value ? parseInt(anomaly.line_coord1_x.value) : undefined,
           line_coord2_y: anomaly.line_coord2_y.value ? parseInt(anomaly.line_coord2_y.value) : undefined,
         }
