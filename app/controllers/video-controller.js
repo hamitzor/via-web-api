@@ -117,7 +117,9 @@ class VideoController extends Controller {
           }
           /*Validation*/
 
-          const argsList = ["-m", "packages.main_scripts.extract_meta_data", videoFile.path]
+          const thumbnailDirectory = fetchConfig("upload-directory:thumbnail")
+
+          const argsList = ["-m", "packages.main_scripts.extract_meta_data", videoFile.path, thumbnailDirectory]
 
           const env = { PYTHONPATH: fetchConfig("module-path:helper") }
 
@@ -138,6 +140,7 @@ class VideoController extends Controller {
                 frame_count: metaData.frame_count,
                 width: metaData.width,
                 height: metaData.height,
+                thumbnail: `thumbnail/${metaData.thumbnail}`,
                 eqf_status: eqfStatusCodes.NOT_STARTED
               }
 

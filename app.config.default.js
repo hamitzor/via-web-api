@@ -20,5 +20,6 @@ module.exports = {
   "logging:directory:wss": "/var/log",
   "logging:directory:video": "/var/log",
   "upload-directory:video": "",
+  "upload-directory:thumbnail": "",
   "temporary-directory": "/tmp"
 }

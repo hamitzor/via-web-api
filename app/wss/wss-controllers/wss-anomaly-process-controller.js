@@ -25,16 +25,6 @@ class WSSAnomalyController extends WSSController {
     try {
     const process = spawn("python3", argsList, { cwd })
  
-    ws.on("close", () => {
-      process.kill()
-      this._sendAndClose(ws, codes.TERMINATED_BY_USER)
-    })
-
-    anomalyEventEmitter.onTerminate(operationId, () => {
-      process.kill()
-      anomalyEventEmitter.didTerminate(operationId)
-    })
-    
     this._send(ws, codes.OK, { operationId })
   
     process.stdout.on("data", async (data) => {
