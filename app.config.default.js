@@ -20,5 +20,6 @@ module.exports = {
   "logging:directory:wss": "/var/log",
   "logging:directory:video": "/var/log",
   "upload-directory:video": "",
+  "upload-directory:tumbnail": "/home/hamit/media-source/tumbnail",
   "temporary-directory": "/tmp"
 }
